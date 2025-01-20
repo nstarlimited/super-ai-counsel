@@ -23,8 +23,8 @@ export const Hero = () => {
         </div>
         <div className="flex-1">
           <img
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80"
-            alt="Professional Lawyer"
+            src="/lovable-uploads/a83d8219-1d07-4bfc-9fff-d3ba4208af93.png"
+            alt="Professional Legal Counsel"
             className="rounded-lg shadow-xl w-full max-w-md mx-auto object-cover"
           />
         </div>
