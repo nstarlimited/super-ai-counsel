@@ -38,9 +38,16 @@ import {
   HelpCircle,
   Settings,
   LogOut,
+  ChevronRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function DashboardSidebar() {
   const navigate = useNavigate();
@@ -61,62 +68,104 @@ export function DashboardSidebar() {
     {
       label: "Legal Assistance",
       items: [
-        { title: "Ask AI Lawyer", icon: Scale, url: "/dashboard/ask-ai" },
-        { title: "Document Automation", icon: FileText, url: "/dashboard/documents" },
-        { title: "Document Review", icon: Upload, url: "/dashboard/review" },
+        {
+          title: "Legal AI Tools",
+          icon: Scale,
+          subItems: [
+            { title: "Ask AI Lawyer", url: "/dashboard/ask-ai" },
+            { title: "Document Automation", url: "/dashboard/documents" },
+            { title: "Document Review", url: "/dashboard/review" },
+          ],
+        },
         { title: "Emergency Legal Help", icon: AlertTriangle, url: "/dashboard/emergency" },
       ],
     },
     {
       label: "Lawyer Marketplace",
       items: [
-        { title: "Find a Lawyer", icon: Users, url: "/dashboard/find-lawyer" },
-        { title: "Consultation Booking", icon: Calendar, url: "/dashboard/booking" },
-        { title: "Lawyer Ratings & Reviews", icon: Star, url: "/dashboard/reviews" },
+        {
+          title: "Find Legal Help",
+          icon: Users,
+          subItems: [
+            { title: "Find a Lawyer", url: "/dashboard/find-lawyer" },
+            { title: "Book Consultation", url: "/dashboard/booking" },
+            { title: "Ratings & Reviews", url: "/dashboard/reviews" },
+          ],
+        },
       ],
     },
     {
       label: "Community",
       items: [
-        { title: "Legal Forums", icon: MessageSquare, url: "/dashboard/forums" },
-        { title: "Knowledge Hub", icon: BookOpen, url: "/dashboard/knowledge" },
-        { title: "Competitions & Awards", icon: Trophy, url: "/dashboard/competitions" },
-        { title: "Networking", icon: Network, url: "/dashboard/networking" },
+        {
+          title: "Community Features",
+          icon: MessageSquare,
+          subItems: [
+            { title: "Legal Forums", url: "/dashboard/forums" },
+            { title: "Knowledge Hub", url: "/dashboard/knowledge" },
+            { title: "Competitions", url: "/dashboard/competitions" },
+            { title: "Networking", url: "/dashboard/networking" },
+          ],
+        },
       ],
     },
     {
       label: "Smart Tools",
       items: [
-        { title: "Legal Insights", icon: LineChart, url: "/dashboard/insights" },
-        { title: "Legal Translator", icon: Languages, url: "/dashboard/translator" },
-        { title: "AI Legal Chatbot", icon: Bot, url: "/dashboard/chatbot" },
-        { title: "Personalized Notifications", icon: Bell, url: "/dashboard/notifications" },
+        {
+          title: "AI Tools",
+          icon: Bot,
+          subItems: [
+            { title: "Legal Insights", url: "/dashboard/insights" },
+            { title: "Legal Translator", url: "/dashboard/translator" },
+            { title: "AI Chatbot", url: "/dashboard/chatbot" },
+          ],
+        },
+        { title: "Notifications", icon: Bell, url: "/dashboard/notifications" },
       ],
     },
     {
       label: "Marketplace",
       items: [
-        { title: "Legal Services", icon: ShoppingCart, url: "/dashboard/services" },
-        { title: "Courses & Tutorials", icon: GraduationCap, url: "/dashboard/courses" },
-        { title: "Premium Templates", icon: FileCode, url: "/dashboard/templates" },
-        { title: "Legal Software Tools", icon: Box, url: "/dashboard/tools" },
+        {
+          title: "Legal Resources",
+          icon: ShoppingCart,
+          subItems: [
+            { title: "Legal Services", url: "/dashboard/services" },
+            { title: "Courses & Tutorials", url: "/dashboard/courses" },
+            { title: "Templates", url: "/dashboard/templates" },
+            { title: "Software Tools", url: "/dashboard/tools" },
+          ],
+        },
       ],
     },
     {
       label: "Community Groups",
       items: [
-        { title: "Industry Groups", icon: Users, url: "/dashboard/industry-groups" },
-        { title: "Peer Advice", icon: MessagesSquare, url: "/dashboard/peer-advice" },
-        { title: "Events & Webinars", icon: CalendarDays, url: "/dashboard/events" },
+        {
+          title: "Groups & Events",
+          icon: Users,
+          subItems: [
+            { title: "Industry Groups", url: "/dashboard/industry-groups" },
+            { title: "Peer Advice", url: "/dashboard/peer-advice" },
+            { title: "Events & Webinars", url: "/dashboard/events" },
+          ],
+        },
         { title: "Feedback", icon: MessageCircle, url: "/dashboard/feedback" },
       ],
     },
     {
-      label: "Subscription & Support",
+      label: "Support",
       items: [
-        { title: "Subscription Plans", icon: CreditCard, url: "/dashboard/subscription" },
-        { title: "Customer Support", icon: HeadphonesIcon, url: "/dashboard/support" },
-        { title: "Help Center", icon: HelpCircle, url: "/dashboard/help" },
+        {
+          title: "Help & Support",
+          icon: HeadphonesIcon,
+          subItems: [
+            { title: "Subscription Plans", url: "/dashboard/subscription" },
+            { title: "Customer Support", url: "/dashboard/support" },
+            { title: "Help Center", url: "/dashboard/help" },
+          ],
+        },
       ],
     },
     {
@@ -138,23 +187,52 @@ export function DashboardSidebar() {
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild={!item.onClick}
-                      onClick={item.onClick}
-                      tooltip={item.title}
-                    >
-                      {item.onClick ? (
-                        <button>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </button>
-                      ) : (
-                        <a href={item.url}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </a>
-                      )}
-                    </SidebarMenuButton>
+                    {item.subItems ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <SidebarMenuButton>
+                            <item.icon />
+                            <span>{item.title}</span>
+                            <ChevronRight className="ml-auto h-4 w-4" />
+                          </SidebarMenuButton>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          side="right"
+                          className="w-48"
+                          align="start"
+                          alignOffset={-4}
+                        >
+                          {item.subItems.map((subItem) => (
+                            <DropdownMenuItem key={subItem.title} asChild>
+                              <a
+                                href={subItem.url}
+                                className="flex items-center cursor-pointer"
+                              >
+                                {subItem.title}
+                              </a>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : (
+                      <SidebarMenuButton
+                        asChild={!item.onClick}
+                        onClick={item.onClick}
+                        tooltip={item.title}
+                      >
+                        {item.onClick ? (
+                          <button>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </button>
+                        ) : (
+                          <a href={item.url}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </a>
+                        )}
+                      </SidebarMenuButton>
+                    )}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
