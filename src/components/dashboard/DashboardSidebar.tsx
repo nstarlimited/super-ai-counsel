@@ -30,7 +30,6 @@ import {
   GraduationCap,
   FileCode,
   Box,
-  UserGroup,
   MessagesSquare,
   CalendarDays,
   MessageCircle,
@@ -106,7 +105,7 @@ export function DashboardSidebar() {
     {
       label: "Community Groups",
       items: [
-        { title: "Industry Groups", icon: UserGroup, url: "/dashboard/industry-groups" },
+        { title: "Industry Groups", icon: Users, url: "/dashboard/industry-groups" },
         { title: "Peer Advice", icon: MessagesSquare, url: "/dashboard/peer-advice" },
         { title: "Events & Webinars", icon: CalendarDays, url: "/dashboard/events" },
         { title: "Feedback", icon: MessageCircle, url: "/dashboard/feedback" },
