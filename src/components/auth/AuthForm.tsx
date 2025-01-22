@@ -21,12 +21,21 @@ const AuthForm = () => {
   }, [navigate]);
 
   const getErrorMessage = (error: AuthError) => {
-    switch (error.message) {
-      case "Invalid login credentials":
+    // Check the error body for specific error codes
+    const errorBody = error.message && error.message.includes('{') 
+      ? JSON.parse(error.message).body 
+      : null;
+    
+    const errorCode = errorBody ? JSON.parse(errorBody).code : null;
+
+    switch (errorCode) {
+      case "user_already_exists":
+        return "This email is already registered. Please sign in instead.";
+      case "invalid_login_credentials":
         return "Invalid email or password. Please check your credentials and try again.";
-      case "Email not confirmed":
+      case "email_not_confirmed":
         return "Please verify your email address before signing in.";
-      case "User not found":
+      case "user_not_found":
         return "No user found with these credentials.";
       default:
         return error.message;
@@ -55,13 +64,8 @@ const AuthForm = () => {
         }}
         providers={[]}
         view="sign_up"
-        additionalData={{
-          first_name: true,
-          last_name: true,
-          city: true,
-          state: true,
-          country: true,
-          phone_number: true,
+        onError={(error) => {
+          setErrorMessage(getErrorMessage(error));
         }}
       />
     </div>
