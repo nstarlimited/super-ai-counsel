@@ -2,7 +2,14 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { Header } from "@/components/Header";
+import { SmartSearch } from "@/components/home/SmartSearch";
+import { WelcomeBanner } from "@/components/home/WelcomeBanner";
+import { QuickAccess } from "@/components/home/QuickAccess";
+import { DeadlinesAlerts } from "@/components/home/DeadlinesAlerts";
+import { LegalNews } from "@/components/home/LegalNews";
+import { JobOpportunities } from "@/components/home/JobOpportunities";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -18,20 +25,28 @@ const Dashboard = () => {
   }, [navigate]);
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <DashboardSidebar />
-        <main className="flex-1 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <SidebarTrigger className="lg:hidden" />
-            <h1 className="text-2xl font-bold">Welcome to Super AI Counsel</h1>
+    <div className="min-h-screen">
+      <Header />
+      <div className="pt-[73px]">
+        <SidebarProvider>
+          <div className="flex min-h-[calc(100vh-73px)] w-full">
+            <DashboardSidebar />
+            <SidebarInset className="flex-1 p-6">
+              <div className="max-w-7xl mx-auto space-y-6">
+                <SmartSearch />
+                <WelcomeBanner />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <QuickAccess />
+                  <DeadlinesAlerts />
+                  <LegalNews />
+                  <JobOpportunities />
+                </div>
+              </div>
+            </SidebarInset>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Dashboard content will go here */}
-          </div>
-        </main>
+        </SidebarProvider>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 
