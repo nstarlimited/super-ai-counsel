@@ -64,8 +64,14 @@ const AuthForm = () => {
         }}
         providers={[]}
         view="sign_up"
-        onError={(error) => {
-          setErrorMessage(getErrorMessage(error));
+        localization={{
+          variables: {
+            sign_up: {
+              email_label: "Email",
+              password_label: "Password",
+              button_label: "Sign up",
+            },
+          },
         }}
       />
     </div>
