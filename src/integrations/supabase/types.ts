@@ -9,6 +9,69 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      legal_jobs: {
+        Row: {
+          company: string
+          created_at: string
+          description: string | null
+          id: string
+          job_type: string
+          location: string
+          requirements: string[] | null
+          salary_range: string | null
+          title: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_type: string
+          location: string
+          requirements?: string[] | null
+          salary_range?: string | null
+          title: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_type?: string
+          location?: string
+          requirements?: string[] | null
+          salary_range?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      legal_news: {
+        Row: {
+          category: string | null
+          content: string
+          id: string
+          published_at: string
+          source: string | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          id?: string
+          published_at?: string
+          source?: string | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          id?: string
+          published_at?: string
+          source?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           city: string | null
@@ -42,6 +105,63 @@ export type Database = {
           phone_number?: string | null
           state?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_activities: {
+        Row: {
+          activity_data: Json | null
+          activity_type: string
+          created_at: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          activity_data?: Json | null
+          activity_type: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          activity_data?: Json | null
+          activity_type?: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_deadlines: {
+        Row: {
+          created_at: string
+          description: string | null
+          due_date: string
+          id: string
+          priority: string | null
+          status: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          due_date: string
+          id?: string
+          priority?: string | null
+          status?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          due_date?: string
+          id?: string
+          priority?: string | null
+          status?: string | null
+          title?: string
+          user_id?: string | null
         }
         Relationships: []
       }
