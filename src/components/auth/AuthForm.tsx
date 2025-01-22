@@ -64,7 +64,7 @@ const AuthForm = () => {
         }}
         providers={[]}
         view="sign_up"
-        onError={(error) => {
+        onAuthError={(error) => {
           setErrorMessage(getErrorMessage(error));
         }}
       />
