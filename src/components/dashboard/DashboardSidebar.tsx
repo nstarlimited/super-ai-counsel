@@ -207,7 +207,7 @@ export function DashboardSidebar() {
                             <DropdownMenuItem key={subItem.title} asChild>
                               <a
                                 href={subItem.url}
-                                className="flex items-center cursor-pointer"
+                                className="flex items-center cursor-pointer text-black"
                               >
                                 {subItem.title}
                               </a>
