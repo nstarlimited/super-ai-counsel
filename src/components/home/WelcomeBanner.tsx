@@ -7,7 +7,10 @@ export const WelcomeBanner = () => {
       <p className="mb-4">Your intelligent legal assistant is ready to help</p>
       <div className="flex gap-3">
         <Button variant="secondary">Quick Start Guide</Button>
-        <Button variant="outline" className="text-white border-white hover:bg-white/10">
+        <Button 
+          variant="outline" 
+          className="border-secondary text-secondary hover:bg-secondary/10"
+        >
           View Tutorial
         </Button>
       </div>
