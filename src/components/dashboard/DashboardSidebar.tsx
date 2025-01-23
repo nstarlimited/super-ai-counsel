@@ -1,7 +1,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -146,7 +145,7 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <Sidebar>
+    <Sidebar className="mt-[73px]">
       <SidebarContent>
         {menuGroups.map((group) => (
           <SidebarGroup key={group.label}>
@@ -159,7 +158,7 @@ export function DashboardSidebar() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <SidebarMenuButton>
-                            <item.icon />
+                            <item.icon className="h-4 w-4" />
                             <span>{item.title}</span>
                             <ChevronRight className="ml-auto h-4 w-4" />
                           </SidebarMenuButton>
@@ -189,13 +188,13 @@ export function DashboardSidebar() {
                         tooltip={item.title}
                       >
                         {item.onClick ? (
-                          <button>
-                            <item.icon />
+                          <button className="w-full flex items-center">
+                            <item.icon className="h-4 w-4" />
                             <span>{item.title}</span>
                           </button>
                         ) : (
-                          <a href={item.url}>
-                            <item.icon />
+                          <a href={item.url} className="w-full flex items-center">
+                            <item.icon className="h-4 w-4" />
                             <span>{item.title}</span>
                           </a>
                         )}
@@ -208,16 +207,6 @@ export function DashboardSidebar() {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleLogout}>
-              <LogOut />
-              <span>Sign Out</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }
