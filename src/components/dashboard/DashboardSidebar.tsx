@@ -80,16 +80,7 @@ export function DashboardSidebar() {
     {
       label: "Community",
       items: [
-        {
-          title: "Community Features",
-          icon: MessageSquare,
-          subItems: [
-            { title: "Legal Forums", url: "/dashboard/forums" },
-            { title: "Knowledge Hub", url: "/dashboard/knowledge" },
-            { title: "Competitions", url: "/dashboard/competitions" },
-            { title: "Networking", url: "/dashboard/networking" },
-          ],
-        },
+        { title: "Community Features", icon: MessageSquare, url: "/dashboard/community" },
       ],
     },
     {
