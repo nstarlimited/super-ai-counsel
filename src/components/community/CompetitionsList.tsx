@@ -29,11 +29,39 @@ export function CompetitionsList({ competitions, isLoading }: CompetitionsListPr
 
   const handleRegister = async (competitionId: string, title: string) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "Please sign in to register for competitions.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check if already registered
+      const { data: existingRegistration } = await supabase
+        .from("competition_participants")
+        .select()
+        .eq("competition_id", competitionId)
+        .eq("user_id", user.id)
+        .single();
+
+      if (existingRegistration) {
+        toast({
+          title: "Already registered",
+          description: "You are already registered for this competition.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from("competition_participants")
         .insert([{
           competition_id: competitionId,
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: user.id,
         }]);
 
       if (error) throw error;
@@ -43,6 +71,7 @@ export function CompetitionsList({ competitions, isLoading }: CompetitionsListPr
         description: `You have successfully registered for ${title}.`,
       });
     } catch (error) {
+      console.error("Registration error:", error);
       toast({
         title: "Registration failed",
         description: "There was an error registering for the competition. Please try again.",
