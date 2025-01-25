@@ -23,7 +23,7 @@ import {
   LogOut,
   ChevronRight,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
@@ -162,12 +162,12 @@ export function DashboardSidebar() {
                         >
                           {item.subItems.map((subItem) => (
                             <DropdownMenuItem key={subItem.title} asChild>
-                              <a
-                                href={subItem.url}
+                              <Link
+                                to={subItem.url}
                                 className="flex items-center cursor-pointer text-black"
                               >
                                 {subItem.title}
-                              </a>
+                              </Link>
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuContent>
@@ -184,10 +184,10 @@ export function DashboardSidebar() {
                             <span>{item.title}</span>
                           </button>
                         ) : (
-                          <a href={item.url} className="w-full flex items-center">
+                          <Link to={item.url} className="w-full flex items-center">
                             <item.icon className="h-4 w-4" />
                             <span>{item.title}</span>
-                          </a>
+                          </Link>
                         )}
                       </SidebarMenuButton>
                     )}
