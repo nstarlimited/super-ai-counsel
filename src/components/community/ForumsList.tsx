@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, TrendingUp, Users } from "lucide-react";
+import { MessageSquare, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { CreateForumModal } from "./CreateForumModal";
 
@@ -36,9 +36,6 @@ export function ForumsList() {
               <CardTitle className="text-xl flex items-center gap-2">
                 <MessageSquare className="h-5 w-5" />
                 {forum.title}
-                {forum.trending && (
-                  <TrendingUp className="h-4 w-4 text-secondary" />
-                )}
               </CardTitle>
             </div>
           </CardHeader>
