@@ -40,13 +40,18 @@ export function CompetitionsList({ competitions, isLoading }: CompetitionsListPr
         return;
       }
 
-      // Check if already registered
-      const { data: existingRegistration } = await supabase
+      // Check if already registered using maybeSingle() instead of single()
+      const { data: existingRegistration, error: checkError } = await supabase
         .from("competition_participants")
         .select()
         .eq("competition_id", competitionId)
         .eq("user_id", user.id)
-        .single();
+        .maybeSingle();
+
+      if (checkError) {
+        console.error("Error checking registration:", checkError);
+        throw checkError;
+      }
 
       if (existingRegistration) {
         toast({
