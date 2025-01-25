@@ -9,6 +9,86 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      competition_participants: {
+        Row: {
+          competition_id: string | null
+          id: string
+          registration_date: string
+          status: string | null
+          team_name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          competition_id?: string | null
+          id?: string
+          registration_date?: string
+          status?: string | null
+          team_name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          competition_id?: string | null
+          id?: string
+          registration_date?: string
+          status?: string | null
+          team_name?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competition_participants_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competitions: {
+        Row: {
+          created_at: string
+          description: string
+          end_date: string
+          id: string
+          max_participants: number | null
+          prize_details: Json | null
+          registration_deadline: string
+          rules: string | null
+          start_date: string
+          status: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          end_date: string
+          id?: string
+          max_participants?: number | null
+          prize_details?: Json | null
+          registration_deadline: string
+          rules?: string | null
+          start_date: string
+          status?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          end_date?: string
+          id?: string
+          max_participants?: number | null
+          prize_details?: Json | null
+          registration_deadline?: string
+          rules?: string | null
+          start_date?: string
+          status?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       legal_jobs: {
         Row: {
           company: string
