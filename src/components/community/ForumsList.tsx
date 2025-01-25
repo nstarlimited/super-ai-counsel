@@ -1,37 +1,35 @@
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, TrendingUp, Users } from "lucide-react";
-
-const MOCK_FORUMS = [
-  {
-    id: 1,
-    title: "Corporate Law",
-    description: "Discuss corporate law matters, mergers, acquisitions, and business regulations.",
-    topics: 156,
-    posts: 1243,
-    trending: true,
-  },
-  {
-    id: 2,
-    title: "Criminal Law",
-    description: "Exchange knowledge about criminal law procedures and cases.",
-    topics: 98,
-    posts: 876,
-    trending: false,
-  },
-  {
-    id: 3,
-    title: "Intellectual Property",
-    description: "Patents, trademarks, and copyright discussions.",
-    topics: 134,
-    posts: 967,
-    trending: true,
-  },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { CreateForumModal } from "./CreateForumModal";
 
 export function ForumsList() {
+  const { data: forums, isLoading } = useQuery({
+    queryKey: ["forums"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("forums")
+        .select("*")
+        .order("created_at", { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return <div>Loading forums...</div>;
+  }
+
   return (
     <div className="space-y-6">
-      {MOCK_FORUMS.map((forum) => (
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Forums</h2>
+        <CreateForumModal />
+      </div>
+
+      {forums?.map((forum) => (
         <Card key={forum.id}>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -49,11 +47,7 @@ export function ForumsList() {
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
-                <span>{forum.topics} Topics</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>{forum.posts} Posts</span>
+                <span>Category: {forum.category}</span>
               </div>
             </div>
           </CardContent>

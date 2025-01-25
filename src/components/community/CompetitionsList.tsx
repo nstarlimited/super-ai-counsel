@@ -3,6 +3,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Trophy, Users } from "lucide-react";
 import { format } from "date-fns";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 interface Competition {
   id: string;
@@ -22,6 +25,32 @@ interface CompetitionsListProps {
 }
 
 export function CompetitionsList({ competitions, isLoading }: CompetitionsListProps) {
+  const { toast } = useToast();
+
+  const handleRegister = async (competitionId: string, title: string) => {
+    try {
+      const { error } = await supabase
+        .from("competition_participants")
+        .insert([{
+          competition_id: competitionId,
+          user_id: (await supabase.auth.getUser()).data.user?.id,
+        }]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Registration successful!",
+        description: `You have successfully registered for ${title}.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Registration failed",
+        description: "There was an error registering for the competition. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return <div>Loading competitions...</div>;
   }
@@ -72,7 +101,12 @@ export function CompetitionsList({ competitions, isLoading }: CompetitionsListPr
               )}
             </div>
 
-            <Button className="w-full">Register Now</Button>
+            <Button 
+              className="w-full"
+              onClick={() => handleRegister(competition.id, competition.title)}
+            >
+              Register Now
+            </Button>
           </CardContent>
         </Card>
       ))}

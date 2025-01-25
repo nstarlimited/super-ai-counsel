@@ -89,6 +89,113 @@ export type Database = {
         }
         Relationships: []
       }
+      forum_posts: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          downvotes: number | null
+          forum_id: string | null
+          id: string
+          title: string
+          updated_at: string
+          upvotes: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          downvotes?: number | null
+          forum_id?: string | null
+          id?: string
+          title: string
+          updated_at?: string
+          upvotes?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          downvotes?: number | null
+          forum_id?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+          upvotes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_posts_forum_id_fkey"
+            columns: ["forum_id"]
+            isOneToOne: false
+            referencedRelation: "forums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forums: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      knowledge_resources: {
+        Row: {
+          bookmarks: number | null
+          category: string
+          content: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          likes: number | null
+          title: string
+        }
+        Insert: {
+          bookmarks?: number | null
+          category: string
+          content: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          likes?: number | null
+          title: string
+        }
+        Update: {
+          bookmarks?: number | null
+          category?: string
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          likes?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
       legal_jobs: {
         Row: {
           company: string
@@ -152,6 +259,33 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read_at: string | null
+          recipient_id: string | null
+          sender_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_id?: string | null
+          sender_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_id?: string | null
+          sender_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           city: string | null
@@ -209,6 +343,30 @@ export type Database = {
           created_at?: string
           id?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_connections: {
+        Row: {
+          created_at: string
+          id: string
+          recipient_id: string | null
+          requester_id: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          recipient_id?: string | null
+          requester_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          recipient_id?: string | null
+          requester_id?: string | null
+          status?: string | null
         }
         Relationships: []
       }
