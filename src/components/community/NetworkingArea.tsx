@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { MessageModal } from "./MessageModal";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface Profile {
   id: string;
@@ -14,6 +15,8 @@ interface Profile {
   last_name: string | null;
   city: string | null;
   country: string | null;
+  avatar_url: string | null;
+  bio: string | null;
 }
 
 interface Connection {
@@ -72,7 +75,6 @@ export function NetworkingArea() {
         return;
       }
 
-      // Check if connection already exists
       const existingConnection = connections.find(
         conn => (conn.requester_id === currentUserId && conn.recipient_id === userId) ||
                 (conn.recipient_id === currentUserId && conn.requester_id === userId)
@@ -96,7 +98,6 @@ export function NetworkingArea() {
 
       if (error) throw error;
 
-      // Refresh connections
       fetchConnections(currentUserId);
 
       toast({
@@ -121,6 +122,10 @@ export function NetworkingArea() {
     return connection?.status || null;
   };
 
+  const getInitials = (firstName: string | null, lastName: string | null) => {
+    return `${firstName?.[0] || ''}${lastName?.[0] || ''}`;
+  };
+
   if (isLoading) {
     return <div>Loading profiles...</div>;
   }
@@ -132,12 +137,24 @@ export function NetworkingArea() {
         const connectionStatus = getConnectionStatus(profile.id);
         
         return (
-          <Card key={profile.id}>
+          <Card key={profile.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-xl">
-                  {profile.first_name} {profile.last_name}
-                </CardTitle>
+              <div className="flex items-start gap-4">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage 
+                    src={profile.avatar_url || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"} 
+                    alt={`${profile.first_name} ${profile.last_name}`} 
+                  />
+                  <AvatarFallback>{getInitials(profile.first_name, profile.last_name)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <CardTitle className="text-xl">
+                    {profile.first_name} {profile.last_name}
+                  </CardTitle>
+                  {profile.bio && (
+                    <p className="text-sm text-gray-500 mt-1">{profile.bio}</p>
+                  )}
+                </div>
                 {connectionStatus && (
                   <Badge variant="secondary">
                     {connectionStatus}
@@ -147,7 +164,7 @@ export function NetworkingArea() {
             </CardHeader>
             <CardContent className="space-y-4">
               {profile.city && profile.country && (
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
                   <MapPin className="h-4 w-4" />
                   <span>{profile.city}, {profile.country}</span>
                 </div>
