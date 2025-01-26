@@ -4,11 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { MessageSquare, Trophy, Users, BookOpen } from "lucide-react";
+import { MessageSquare, Trophy, Users, BookOpen, Video, Shield, UsersRound } from "lucide-react";
 import { CompetitionsList } from "@/components/community/CompetitionsList";
 import { ForumsList } from "@/components/community/ForumsList";
 import { KnowledgeHub } from "@/components/community/KnowledgeHub";
 import { NetworkingArea } from "@/components/community/NetworkingArea";
+import { GroupsList } from "@/components/community/groups/GroupsList";
+import { SessionsList } from "@/components/community/live-sessions/SessionsList";
+import { CasesList } from "@/components/community/legal-aid/CasesList";
 
 export default function CommunityFeatures() {
   const { data: competitions, isLoading: isLoadingCompetitions } = useQuery({
@@ -37,7 +40,7 @@ export default function CommunityFeatures() {
       </Alert>
 
       <Tabs defaultValue="competitions" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-8">
+        <TabsList className="grid w-full grid-cols-7 mb-8">
           <TabsTrigger value="competitions" className="flex items-center gap-2">
             <Trophy className="h-4 w-4" />
             Competitions
@@ -53,6 +56,18 @@ export default function CommunityFeatures() {
           <TabsTrigger value="networking" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Networking
+          </TabsTrigger>
+          <TabsTrigger value="groups" className="flex items-center gap-2">
+            <UsersRound className="h-4 w-4" />
+            Groups
+          </TabsTrigger>
+          <TabsTrigger value="sessions" className="flex items-center gap-2">
+            <Video className="h-4 w-4" />
+            Live Sessions
+          </TabsTrigger>
+          <TabsTrigger value="legal-aid" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Legal Aid
           </TabsTrigger>
         </TabsList>
 
@@ -70,6 +85,18 @@ export default function CommunityFeatures() {
 
         <TabsContent value="networking">
           <NetworkingArea />
+        </TabsContent>
+
+        <TabsContent value="groups">
+          <GroupsList />
+        </TabsContent>
+
+        <TabsContent value="sessions">
+          <SessionsList />
+        </TabsContent>
+
+        <TabsContent value="legal-aid">
+          <CasesList />
         </TabsContent>
       </Tabs>
     </div>
