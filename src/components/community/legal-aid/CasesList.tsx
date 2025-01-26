@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Shield, Handshake } from "lucide-react";
+import { Shield } from "lucide-react";
 import { CreateCaseModal } from "./CreateCaseModal";
 
 export function CasesList() {
@@ -19,13 +18,9 @@ export function CasesList() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-muted-foreground">
               This is a placeholder for case content.
             </p>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Handshake className="h-4 w-4" />
-              <span>Seeking Volunteers</span>
-            </div>
           </CardContent>
         </Card>
       </div>

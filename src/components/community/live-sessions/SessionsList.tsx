@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Video, Calendar } from "lucide-react";
+import { Video } from "lucide-react";
 import { CreateSessionModal } from "./CreateSessionModal";
 
 export function SessionsList() {
@@ -19,13 +18,9 @@ export function SessionsList() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-muted-foreground">
               This is a placeholder for session content.
             </p>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="h-4 w-4" />
-              <span>Upcoming</span>
-            </div>
           </CardContent>
         </Card>
       </div>
