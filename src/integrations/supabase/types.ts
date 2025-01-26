@@ -9,6 +9,79 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      case_applications: {
+        Row: {
+          applicant_id: string | null
+          case_id: string | null
+          created_at: string
+          id: string
+          message: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          applicant_id?: string | null
+          case_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          applicant_id?: string | null
+          case_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_applications_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "legal_aid_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      case_updates: {
+        Row: {
+          case_id: string | null
+          created_at: string
+          id: string
+          posted_by: string | null
+          update_text: string
+          update_type: string | null
+        }
+        Insert: {
+          case_id?: string | null
+          created_at?: string
+          id?: string
+          posted_by?: string | null
+          update_text: string
+          update_type?: string | null
+        }
+        Update: {
+          case_id?: string | null
+          created_at?: string
+          id?: string
+          posted_by?: string | null
+          update_text?: string
+          update_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_updates_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "legal_aid_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       competition_participants: {
         Row: {
           competition_id: string | null
@@ -160,6 +233,136 @@ export type Database = {
         }
         Relationships: []
       }
+      group_events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          event_date: string
+          group_id: string | null
+          id: string
+          is_online: boolean | null
+          location: string | null
+          max_participants: number | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          event_date: string
+          group_id?: string | null
+          id?: string
+          is_online?: boolean | null
+          location?: string | null
+          max_participants?: number | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          event_date?: string
+          group_id?: string | null
+          id?: string
+          is_online?: boolean | null
+          location?: string | null
+          max_participants?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_events_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_memberships: {
+        Row: {
+          group_id: string | null
+          id: string
+          joined_at: string
+          role: string
+          status: string
+          subscription_id: string | null
+          subscription_status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          group_id?: string | null
+          id?: string
+          joined_at?: string
+          role: string
+          status?: string
+          subscription_id?: string | null
+          subscription_status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          group_id?: string | null
+          id?: string
+          joined_at?: string
+          role?: string
+          status?: string
+          subscription_id?: string | null
+          subscription_status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_memberships_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          is_private: boolean | null
+          max_members: number | null
+          membership_type: string
+          name: string
+          price_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          is_private?: boolean | null
+          max_members?: number | null
+          membership_type: string
+          name: string
+          price_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          is_private?: boolean | null
+          max_members?: number | null
+          membership_type?: string
+          name?: string
+          price_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       knowledge_resources: {
         Row: {
           bookmarks: number | null
@@ -193,6 +396,54 @@ export type Database = {
           id?: string
           likes?: number | null
           title?: string
+        }
+        Relationships: []
+      }
+      legal_aid_cases: {
+        Row: {
+          assigned_to: string | null
+          compensation_details: string | null
+          created_at: string
+          deadline: string | null
+          description: string
+          id: string
+          is_pro_bono: boolean | null
+          location: string | null
+          posted_by: string | null
+          required_expertise: string[]
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          compensation_details?: string | null
+          created_at?: string
+          deadline?: string | null
+          description: string
+          id?: string
+          is_pro_bono?: boolean | null
+          location?: string | null
+          posted_by?: string | null
+          required_expertise: string[]
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          compensation_details?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          id?: string
+          is_pro_bono?: boolean | null
+          location?: string | null
+          posted_by?: string | null
+          required_expertise?: string[]
+          status?: string | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -256,6 +507,54 @@ export type Database = {
           published_at?: string
           source?: string | null
           title?: string
+        }
+        Relationships: []
+      }
+      live_sessions: {
+        Row: {
+          created_at: string
+          description: string
+          host_id: string | null
+          id: string
+          is_premium: boolean | null
+          price_id: string | null
+          recording_url: string | null
+          scheduled_end: string
+          scheduled_start: string
+          status: string | null
+          stream_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          host_id?: string | null
+          id?: string
+          is_premium?: boolean | null
+          price_id?: string | null
+          recording_url?: string | null
+          scheduled_end: string
+          scheduled_start: string
+          status?: string | null
+          stream_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          host_id?: string | null
+          id?: string
+          is_premium?: boolean | null
+          price_id?: string | null
+          recording_url?: string | null
+          scheduled_end?: string
+          scheduled_start?: string
+          status?: string | null
+          stream_url?: string | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -327,6 +626,79 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      session_participants: {
+        Row: {
+          id: string
+          joined_at: string
+          payment_id: string | null
+          payment_status: string | null
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          payment_id?: string | null
+          payment_status?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          payment_id?: string | null
+          payment_status?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_participants_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_questions: {
+        Row: {
+          answered_at: string | null
+          created_at: string
+          id: string
+          question: string
+          session_id: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          answered_at?: string | null
+          created_at?: string
+          id?: string
+          question: string
+          session_id?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          answered_at?: string | null
+          created_at?: string
+          id?: string
+          question?: string
+          session_id?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_questions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_activities: {
         Row: {
