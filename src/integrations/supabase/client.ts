@@ -5,7 +5,4 @@ import type { Database } from './types';
 const SUPABASE_URL = "https://gqttstykaqogfxzxzpgi.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxdHRzdHlrYXFvZ2Z4enh6cGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0NDE2NjcsImV4cCI6MjA1MzAxNzY2N30.0qy8FpUIwjrCPcRItI8jdcTZpMOqVs5W2BIvz1qwXWs";
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
-
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
