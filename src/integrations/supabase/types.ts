@@ -288,6 +288,8 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
+          bio: string | null
           city: string | null
           country: string | null
           created_at: string
@@ -299,6 +301,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
+          bio?: string | null
           city?: string | null
           country?: string | null
           created_at?: string
@@ -310,6 +314,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
+          bio?: string | null
           city?: string | null
           country?: string | null
           created_at?: string
@@ -400,6 +406,57 @@ export type Database = {
           status?: string | null
           title?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          rated_user_id: string | null
+          rater_id: string | null
+          rating: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rated_user_id?: string | null
+          rater_id?: string | null
+          rating?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rated_user_id?: string | null
+          rater_id?: string | null
+          rating?: number | null
+        }
+        Relationships: []
+      }
+      user_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          review_text: string
+          reviewed_user_id: string | null
+          reviewer_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          review_text: string
+          reviewed_user_id?: string | null
+          reviewer_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          review_text?: string
+          reviewed_user_id?: string | null
+          reviewer_id?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
