@@ -11,6 +11,7 @@ import { DeadlinesAlerts } from "@/components/home/DeadlinesAlerts";
 import { LegalNews } from "@/components/home/LegalNews";
 import { JobOpportunities } from "@/components/home/JobOpportunities";
 import CommunityFeatures from "./dashboard/CommunityFeatures";
+import { LegalAITools } from "./dashboard/LegalAITools";
 
 const DashboardHome = () => (
   <div className="max-w-7xl mx-auto space-y-6">
@@ -49,6 +50,7 @@ const Dashboard = () => {
               <Routes>
                 <Route index element={<DashboardHome />} />
                 <Route path="community/*" element={<CommunityFeatures />} />
+                <Route path="ask-ai" element={<LegalAITools />} />
               </Routes>
             </SidebarInset>
           </div>
