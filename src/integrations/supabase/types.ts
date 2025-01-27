@@ -334,6 +334,7 @@ export type Database = {
           name: string
           price_id: string | null
           updated_at: string
+          visibility: string
         }
         Insert: {
           cover_image_url?: string | null
@@ -347,6 +348,7 @@ export type Database = {
           name: string
           price_id?: string | null
           updated_at?: string
+          visibility?: string
         }
         Update: {
           cover_image_url?: string | null
@@ -360,6 +362,7 @@ export type Database = {
           name?: string
           price_id?: string | null
           updated_at?: string
+          visibility?: string
         }
         Relationships: []
       }
