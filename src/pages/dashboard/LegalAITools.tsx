@@ -19,16 +19,9 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { CategoryCard } from "@/components/legal-ai/CategoryCard";
-import { AgentCard } from "@/components/legal-ai/AgentCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 const categories = [
   {
@@ -242,35 +235,10 @@ export const LegalAITools = () => {
             description={category.description}
             icon={category.icon}
             agentCount={category.agentCount}
+            agents={category.agents}
           />
         ))}
       </div>
-
-      {/* Agent Listings */}
-      <Accordion type="single" collapsible className="w-full">
-        {categories.map((category) => (
-          <AccordionItem key={category.id} value={category.id.toString()}>
-            <AccordionTrigger className="text-lg font-semibold">
-              {category.title}
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                {category.agents.map((agent) => (
-                  <AgentCard
-                    key={agent.name}
-                    name={agent.name}
-                    description={agent.description}
-                    status={agent.status}
-                    rating={agent.rating}
-                    onQuickStart={() => console.log("Quick Start:", agent.name)}
-                    onViewDetails={() => console.log("View Details:", agent.name)}
-                  />
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
     </div>
   );
 };
