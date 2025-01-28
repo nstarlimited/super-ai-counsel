@@ -7,7 +7,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, MessageSquare, Clock, Award } from "lucide-react";
+import { Star, MessageSquare, Clock, Award, Zap, Shield, History } from "lucide-react";
+import { toast } from "sonner";
 
 interface AgentDetailsDialogProps {
   open: boolean;
@@ -26,6 +27,15 @@ export const AgentDetailsDialog = ({
   agent,
 }: AgentDetailsDialogProps) => {
   if (!agent) return null;
+
+  const handleStartSession = () => {
+    if (agent.status === "busy") {
+      toast.error("This agent is currently busy. Please try again later.");
+      return;
+    }
+    toast.success("Starting session with " + agent.name);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -61,11 +71,29 @@ export const AgentDetailsDialog = ({
                 <Award className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm">Specialized expertise</span>
               </div>
+              <div className="flex items-center space-x-2">
+                <Zap className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">Fast response time</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Shield className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">Secure communication</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <History className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">Chat history available</span>
+              </div>
             </div>
           </div>
 
           <div className="flex space-x-3">
-            <Button className="flex-1">Start Session</Button>
+            <Button 
+              className="flex-1" 
+              onClick={handleStartSession}
+              disabled={agent.status === "busy"}
+            >
+              Start Session
+            </Button>
             <Button variant="outline" className="flex-1">
               View Documentation
             </Button>

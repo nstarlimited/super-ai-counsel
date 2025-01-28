@@ -2,6 +2,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bookmark, Star } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface AgentCardProps {
   name: string;
@@ -20,6 +22,15 @@ export const AgentCard = ({
   onQuickStart,
   onViewDetails,
 }: AgentCardProps) => {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const handleBookmark = () => {
+    setIsBookmarked(!isBookmarked);
+    toast.success(
+      isBookmarked ? "Removed from bookmarks" : "Added to bookmarks"
+    );
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -33,7 +44,11 @@ export const AgentCard = ({
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">{description}</p>
         <div className="flex gap-2">
-          <Button onClick={onQuickStart} className="flex-1">
+          <Button 
+            onClick={onQuickStart} 
+            className="flex-1"
+            disabled={status === "busy"}
+          >
             Quick Start
           </Button>
           <Button variant="outline" onClick={onViewDetails} className="flex-1">
@@ -47,8 +62,13 @@ export const AgentCard = ({
             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
             <span className="text-sm">{rating.toFixed(1)}</span>
           </div>
-          <Button variant="ghost" size="icon">
-            <Bookmark className="h-4 w-4" />
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleBookmark}
+            className={isBookmarked ? "text-secondary" : ""}
+          >
+            <Bookmark className="h-4 w-4" fill={isBookmarked ? "currentColor" : "none"} />
           </Button>
         </div>
       </CardFooter>
