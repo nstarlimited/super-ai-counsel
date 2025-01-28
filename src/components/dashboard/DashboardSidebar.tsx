@@ -21,6 +21,9 @@ import {
   HeadphonesIcon,
   Settings,
   LogOut,
+  BookOpen,
+  Shield,
+  Video,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -46,6 +49,15 @@ export function DashboardSidebar() {
       items: [
         { title: "Legal AI Tools", icon: Scale, url: "/dashboard/ask-ai" },
         { title: "Emergency Legal Help", icon: AlertTriangle, url: "/dashboard/emergency" },
+      ],
+    },
+    {
+      label: "Community",
+      items: [
+        { title: "Forums", icon: MessageSquare, url: "/dashboard/community/forums" },
+        { title: "Knowledge Hub", icon: BookOpen, url: "/dashboard/community/knowledge" },
+        { title: "Legal Aid", icon: Shield, url: "/dashboard/community/legal-aid" },
+        { title: "Live Sessions", icon: Video, url: "/dashboard/community/sessions" },
       ],
     },
     {
