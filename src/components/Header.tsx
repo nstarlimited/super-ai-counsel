@@ -1,10 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isDashboard = location.pathname.startsWith('/dashboard');
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm h-[73px]">
@@ -17,7 +30,7 @@ export const Header = () => {
             >
               <span className="text-2xl font-bold text-black">Super AI Counsel</span>
             </Link>
-            {!isDashboard && (
+            {!isDashboard ? (
               <div className="flex items-center space-x-4">
                 <Button 
                   variant="ghost" 
@@ -32,6 +45,24 @@ export const Header = () => {
                 >
                   Sign Up
                 </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => navigate('/dashboard/profile')}>
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             )}
           </div>

@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/sidebar";
 import {
   Home,
-  User,
   Scale,
   AlertTriangle,
   Users,
@@ -20,28 +19,17 @@ import {
   ShoppingCart,
   HeadphonesIcon,
   Settings,
-  LogOut,
-  BookOpen,
-  Shield,
-  Video,
+  Users as Community,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 
 export function DashboardSidebar() {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
-  };
-
   const menuGroups = [
     {
       label: "Main Dashboard",
       items: [
         { title: "Home", icon: Home, url: "/dashboard" },
-        { title: "Profile", icon: User, url: "/dashboard/profile" },
+        { title: "Community", icon: Community, url: "/dashboard/community" },
       ],
     },
     {
@@ -49,15 +37,6 @@ export function DashboardSidebar() {
       items: [
         { title: "Legal AI Tools", icon: Scale, url: "/dashboard/ask-ai" },
         { title: "Emergency Legal Help", icon: AlertTriangle, url: "/dashboard/emergency" },
-      ],
-    },
-    {
-      label: "Community",
-      items: [
-        { title: "Forums", icon: MessageSquare, url: "/dashboard/community/forums" },
-        { title: "Knowledge Hub", icon: BookOpen, url: "/dashboard/community/knowledge" },
-        { title: "Legal Aid", icon: Shield, url: "/dashboard/community/legal-aid" },
-        { title: "Live Sessions", icon: Video, url: "/dashboard/community/sessions" },
       ],
     },
     {
@@ -85,7 +64,6 @@ export function DashboardSidebar() {
       label: "Settings",
       items: [
         { title: "Settings", icon: Settings, url: "/dashboard/settings" },
-        { title: "Logout", icon: LogOut, onClick: handleLogout },
       ],
     },
   ];
@@ -101,21 +79,13 @@ export function DashboardSidebar() {
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      asChild={!item.onClick}
-                      onClick={item.onClick}
+                      asChild
                       tooltip={item.title}
                     >
-                      {item.onClick ? (
-                        <button className="w-full flex items-center">
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.title}</span>
-                        </button>
-                      ) : (
-                        <Link to={item.url} className="w-full flex items-center">
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.title}</span>
-                        </Link>
-                      )}
+                      <Link to={item.url} className="w-full flex items-center">
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
