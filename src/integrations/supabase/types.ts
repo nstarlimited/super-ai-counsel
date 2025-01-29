@@ -210,6 +210,36 @@ export type Database = {
         }
         Relationships: []
       }
+      emergency_resources: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          resource_type: string
+          title: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          resource_type: string
+          title: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          resource_type?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       forum_posts: {
         Row: {
           content: string
@@ -750,6 +780,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      success_stories: {
+        Row: {
+          case_type: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          outcome: string
+          title: string
+        }
+        Insert: {
+          case_type: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          outcome: string
+          title: string
+        }
+        Update: {
+          case_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          outcome?: string
+          title?: string
+        }
+        Relationships: []
       }
       user_activities: {
         Row: {

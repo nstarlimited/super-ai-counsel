@@ -37,12 +37,12 @@ export const CategoryCard = ({
     <>
       <Card className="hover:shadow-lg transition-shadow">
         <CardHeader className="space-y-1">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between space-x-4">
             <div className="flex items-center space-x-2">
               <Icon className="h-5 w-5 text-accent" />
               <CardTitle className="text-lg">{title}</CardTitle>
             </div>
-            <Badge variant="secondary">{agentCount} Agents</Badge>
+            <Badge variant="secondary" className="shrink-0">{agentCount} Agents</Badge>
           </div>
         </CardHeader>
         <CardContent>
