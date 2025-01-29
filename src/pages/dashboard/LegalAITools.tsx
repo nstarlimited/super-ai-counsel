@@ -20,6 +20,9 @@ export const LegalAITools = () => {
   }, []);
 
   const loadBookmarks = async () => {
+    const { data: session } = await supabase.auth.getSession();
+    if (!session.session) return;
+
     const { data, error } = await supabase
       .from('ai_agent_bookmarks')
       .select('agent_name');
@@ -33,9 +36,13 @@ export const LegalAITools = () => {
   };
 
   const trackPageView = async () => {
+    const { data: session } = await supabase.auth.getSession();
+    if (!session.session) return;
+
     const { error } = await supabase
       .from('ai_agent_analytics')
       .insert({
+        user_id: session.session.user.id,
         interaction_type: 'page_view',
         session_duration: 0,
         agent_name: 'all'
@@ -47,13 +54,24 @@ export const LegalAITools = () => {
   };
 
   const toggleBookmark = async (agentName: string) => {
+    const { data: session } = await supabase.auth.getSession();
+    if (!session.session) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to bookmark agents",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     const isBookmarked = bookmarks.includes(agentName);
     
     if (isBookmarked) {
       const { error } = await supabase
         .from('ai_agent_bookmarks')
         .delete()
-        .eq('agent_name', agentName);
+        .eq('agent_name', agentName)
+        .eq('user_id', session.session.user.id);
 
       if (error) {
         toast({
@@ -72,7 +90,10 @@ export const LegalAITools = () => {
     } else {
       const { error } = await supabase
         .from('ai_agent_bookmarks')
-        .insert({ agent_name: agentName });
+        .insert({ 
+          agent_name: agentName,
+          user_id: session.session.user.id
+        });
 
       if (error) {
         toast({
