@@ -14,8 +14,8 @@ serve(async (req) => {
   try {
     const { message } = await req.json()
 
-    // Here you would typically call OpenAI's API
     // For now, we'll just echo back a simple response
+    // Later we can integrate with OpenAI
     const response = `I received your message: ${message}`
 
     return new Response(
@@ -25,6 +25,7 @@ serve(async (req) => {
       },
     )
   } catch (error) {
+    console.error('Error in chat function:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       { 

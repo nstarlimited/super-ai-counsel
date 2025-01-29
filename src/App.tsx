@@ -38,21 +38,23 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route 
-              path="/" 
-              element={!session ? <Index /> : <Navigate to="/dashboard" replace />} 
-            />
-            <Route 
-              path="/auth" 
-              element={!session ? <Auth /> : <Navigate to="/dashboard" replace />} 
-            />
-            <Route 
-              path="/dashboard/*" 
-              element={session ? <Dashboard /> : <Navigate to="/auth" replace />} 
-            />
-          </Routes>
-          <GlobalAIChatbot />
+          <div className="relative min-h-screen">
+            <Routes>
+              <Route 
+                path="/" 
+                element={!session ? <Index /> : <Navigate to="/dashboard" replace />} 
+              />
+              <Route 
+                path="/auth" 
+                element={!session ? <Auth /> : <Navigate to="/dashboard" replace />} 
+              />
+              <Route 
+                path="/dashboard/*" 
+                element={session ? <Dashboard /> : <Navigate to="/auth" replace />} 
+              />
+            </Routes>
+            <GlobalAIChatbot />
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
