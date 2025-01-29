@@ -3,11 +3,9 @@ import { SearchTools } from "@/components/legal-ai/SearchTools";
 import { CategoryCard } from "@/components/legal-ai/CategoryCard";
 import { categories } from "@/data/legalAICategories";
 import { Button } from "@/components/ui/button";
-import { Bookmark, BookmarkCheck, AlertTriangle } from "lucide-react";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { EmergencyLegalHelp } from "@/components/legal-aid/EmergencyLegalHelp";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const LegalAITools = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,8 +18,8 @@ export const LegalAITools = () => {
   }, []);
 
   const loadBookmarks = async () => {
-    const { data: session } = await supabase.auth.getSession();
-    if (!session.session) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
 
     const { data, error } = await supabase
       .from('ai_agent_bookmarks')
@@ -36,13 +34,13 @@ export const LegalAITools = () => {
   };
 
   const trackPageView = async () => {
-    const { data: session } = await supabase.auth.getSession();
-    if (!session.session) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
 
     const { error } = await supabase
       .from('ai_agent_analytics')
       .insert({
-        user_id: session.session.user.id,
+        user_id: session.user.id,
         interaction_type: 'page_view',
         session_duration: 0,
         agent_name: 'all'
@@ -54,8 +52,8 @@ export const LegalAITools = () => {
   };
 
   const toggleBookmark = async (agentName: string) => {
-    const { data: session } = await supabase.auth.getSession();
-    if (!session.session) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
       toast({
         title: "Error",
         description: "You must be logged in to bookmark agents",
@@ -71,7 +69,7 @@ export const LegalAITools = () => {
         .from('ai_agent_bookmarks')
         .delete()
         .eq('agent_name', agentName)
-        .eq('user_id', session.session.user.id);
+        .eq('user_id', session.user.id);
 
       if (error) {
         toast({
@@ -92,7 +90,7 @@ export const LegalAITools = () => {
         .from('ai_agent_bookmarks')
         .insert({ 
           agent_name: agentName,
-          user_id: session.session.user.id
+          user_id: session.user.id
         });
 
       if (error) {
@@ -125,50 +123,34 @@ export const LegalAITools = () => {
 
   return (
     <div className="space-y-8">
-      <Tabs defaultValue="ai-tools" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="ai-tools">AI Legal Tools</TabsTrigger>
-          <TabsTrigger value="emergency" className="text-red-500">
-            <AlertTriangle className="h-4 w-4 mr-2" />
-            Emergency Help
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="ai-tools" className="mt-6">
-          <SearchTools searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {filteredCategories.map((category) => (
-              <div key={category.id} className="relative">
-                <CategoryCard
-                  title={category.title}
-                  description={category.description}
-                  icon={category.icon}
-                  agentCount={category.agentCount}
-                  agents={category.agents}
-                />
-                <div className="absolute top-4 right-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => toggleBookmark(category.title)}
-                  >
-                    {bookmarks.includes(category.title) ? (
-                      <BookmarkCheck className="h-5 w-5 text-primary" />
-                    ) : (
-                      <Bookmark className="h-5 w-5" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            ))}
+      <SearchTools searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredCategories.map((category) => (
+          <div key={category.id} className="relative">
+            <CategoryCard
+              title={category.title}
+              description={category.description}
+              icon={category.icon}
+              agentCount={category.agentCount}
+              agents={category.agents}
+            />
+            <div className="absolute top-4 right-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => toggleBookmark(category.title)}
+              >
+                {bookmarks.includes(category.title) ? (
+                  <BookmarkCheck className="h-5 w-5 text-primary" />
+                ) : (
+                  <Bookmark className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="emergency">
-          <EmergencyLegalHelp />
-        </TabsContent>
-      </Tabs>
+        ))}
+      </div>
     </div>
   );
 };
