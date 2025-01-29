@@ -9,6 +9,7 @@ import type { Session } from '@supabase/supabase-js';
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import { GlobalAIChatbot } from "./components/chat/GlobalAIChatbot";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => {
               element={session ? <Dashboard /> : <Navigate to="/auth" replace />} 
             />
           </Routes>
+          <GlobalAIChatbot />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
