@@ -101,8 +101,8 @@ export function CompetitionsList({ competitions, isLoading }: CompetitionsListPr
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {competitions.map((competition) => (
-        <Card key={competition.id}>
+      {competitions?.map((competition) => (
+        <Card key={competition.id} className="flex flex-col">
           <CardHeader>
             <div className="flex justify-between items-start">
               <CardTitle className="text-xl">{competition.title}</CardTitle>
@@ -111,10 +111,10 @@ export function CompetitionsList({ competitions, isLoading }: CompetitionsListPr
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 flex-grow flex flex-col">
             <p className="text-sm text-muted-foreground">{competition.description}</p>
             
-            <div className="space-y-2">
+            <div className="space-y-2 flex-grow">
               <div className="flex items-center gap-2 text-sm">
                 <Trophy className="h-4 w-4" />
                 <span>Type: {competition.type}</span>
@@ -136,7 +136,7 @@ export function CompetitionsList({ competitions, isLoading }: CompetitionsListPr
             </div>
 
             <Button 
-              className="w-full"
+              className="w-full mt-auto"
               onClick={() => handleRegister(competition.id, competition.title)}
             >
               Register Now

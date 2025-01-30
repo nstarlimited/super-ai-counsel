@@ -137,7 +137,7 @@ export function NetworkingArea() {
         const connectionStatus = getConnectionStatus(profile.id);
         
         return (
-          <Card key={profile.id} className="hover:shadow-lg transition-shadow">
+          <Card key={profile.id} className="hover:shadow-lg transition-shadow flex flex-col">
             <CardHeader>
               <div className="flex items-start gap-4">
                 <Avatar className="h-12 w-12">
@@ -162,7 +162,7 @@ export function NetworkingArea() {
                 )}
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 flex-grow flex flex-col">
               {profile.city && profile.country && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <MapPin className="h-4 w-4" />
@@ -170,7 +170,7 @@ export function NetworkingArea() {
                 </div>
               )}
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-auto">
                 <Button 
                   className="flex-1"
                   onClick={() => handleConnect(profile.id, `${profile.first_name} ${profile.last_name}`)}

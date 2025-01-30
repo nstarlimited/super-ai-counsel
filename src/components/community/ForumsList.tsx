@@ -39,8 +39,8 @@ export function ForumsList() {
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-4">{forum.description}</p>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">{forum.description}</p>
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
