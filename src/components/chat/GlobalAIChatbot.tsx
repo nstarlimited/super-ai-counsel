@@ -163,28 +163,29 @@ export const GlobalAIChatbot = () => {
           </ScrollArea>
 
           <form onSubmit={handleSubmit} className="p-4 border-t">
-            <div className="flex gap-2">
+            <div className="flex items-center gap-3">
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
                 onClick={toggleRecording}
-                className={isRecording ? 'text-red-500' : ''}
+                className={`w-8 h-8 ${isRecording ? 'text-red-500' : ''}`}
               >
-                {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
               </Button>
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 min-w-0 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="flex-1 min-w-0 h-8 rounded-md border border-gray-300 px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={isLoading}
               />
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="bg-primary hover:bg-primary/90"
+                size="icon"
+                className="w-8 h-8 bg-primary hover:bg-primary/90"
               >
                 <Send className="h-4 w-4" />
               </Button>
