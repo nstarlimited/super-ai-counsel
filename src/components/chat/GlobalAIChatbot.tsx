@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, X, Minimize2, Maximize2, Send } from "lucide-react";
+import { MessageCircle, X, Minimize2, Maximize2, Send, Mic, MicOff } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,6 +16,7 @@ export const GlobalAIChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,11 +37,10 @@ export const GlobalAIChatbot = () => {
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
 
-      // Log the interaction in analytics
       await supabase.from('ai_agent_analytics').insert({
         interaction_type: 'chat',
         session_duration: 1,
-        agent_name: 'global-chatbot'
+        agent_name: 'Bar. Tom'
       });
 
     } catch (error) {
@@ -55,7 +55,34 @@ export const GlobalAIChatbot = () => {
     }
   };
 
-  // Scroll to bottom when new messages arrive
+  const toggleRecording = async () => {
+    if (!isRecording) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Handle recording start
+        setIsRecording(true);
+        toast({
+          title: "Recording started",
+          description: "Speak your message clearly...",
+        });
+      } catch (error) {
+        console.error('Error accessing microphone:', error);
+        toast({
+          title: "Error",
+          description: "Could not access microphone. Please check permissions.",
+          variant: "destructive"
+        });
+      }
+    } else {
+      // Handle recording stop
+      setIsRecording(false);
+      toast({
+        title: "Recording stopped",
+        description: "Processing your message...",
+      });
+    }
+  };
+
   useEffect(() => {
     const scrollArea = document.getElementById('chat-scroll-area');
     if (scrollArea) {
@@ -81,7 +108,7 @@ export const GlobalAIChatbot = () => {
       } w-[350px] border border-gray-200`}
     >
       <div className="flex items-center justify-between p-4 border-b">
-        <h3 className="font-semibold">AI Assistant</h3>
+        <h3 className="font-semibold">Bar. Tom</h3>
         <div className="flex gap-2">
           <Button
             variant="ghost"
@@ -137,6 +164,15 @@ export const GlobalAIChatbot = () => {
 
           <form onSubmit={handleSubmit} className="p-4 border-t">
             <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={toggleRecording}
+                className={isRecording ? 'text-red-500' : ''}
+              >
+                {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+              </Button>
               <input
                 type="text"
                 value={input}

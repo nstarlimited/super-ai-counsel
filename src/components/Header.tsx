@@ -50,8 +50,8 @@ export const Header = () => {
               <div className="flex items-center space-x-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <User className="h-5 w-5" />
+                    <Button variant="ghost" size="icon" className="h-12 w-12">
+                      <User className="h-8 w-8" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">

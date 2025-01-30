@@ -42,7 +42,9 @@ export const CategoryCard = ({
               <Icon className="h-5 w-5 text-accent" />
               <CardTitle className="text-lg">{title}</CardTitle>
             </div>
-            <Badge variant="secondary" className="shrink-0">{agentCount} Agents</Badge>
+          </div>
+          <div className="flex justify-center mt-2">
+            <Badge variant="secondary" className="px-4 py-1">{agentCount} Agents</Badge>
           </div>
         </CardHeader>
         <CardContent>

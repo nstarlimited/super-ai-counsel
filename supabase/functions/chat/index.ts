@@ -13,16 +13,28 @@ serve(async (req) => {
 
   try {
     const { message } = await req.json()
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
 
-    // For now, we'll just echo back a simple response
-    // Later we can integrate with OpenAI
-    const response = `I received your message: ${message}`
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `You are Bar. Tom, an AI legal assistant. Please provide a professional and helpful response to this legal question: ${message}`
+          }]
+        }]
+      })
+    });
+
+    const data = await response.json()
+    const aiResponse = data.candidates[0].content.parts[0].text
 
     return new Response(
-      JSON.stringify({ response }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      },
+      JSON.stringify({ response: aiResponse }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (error) {
     console.error('Error in chat function:', error)
@@ -31,7 +43,7 @@ serve(async (req) => {
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400,
-      },
+      }
     )
   }
 })
