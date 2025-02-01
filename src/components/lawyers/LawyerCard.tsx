@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Star, CheckCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type LawyerCardProps = {
   lawyer: {
@@ -45,8 +46,8 @@ export const LawyerCard = ({ lawyer, onSelect }: LawyerCardProps) => {
         </div>
         <div className="space-y-2 text-sm">
           <p>
-            <span className="font-medium">Experience:</span> {lawyer.years_experience}{" "}
-            years
+            <span className="font-medium">Experience:</span>{" "}
+            {lawyer.years_experience} years
           </p>
           <p>
             <span className="font-medium">Rate:</span> ${lawyer.hourly_rate}/hour
@@ -55,7 +56,12 @@ export const LawyerCard = ({ lawyer, onSelect }: LawyerCardProps) => {
             <span className="font-medium">Location:</span> {lawyer.location}
           </p>
           <Badge
-            variant={lawyer.availability_status === "available" ? "success" : "secondary"}
+            variant="outline"
+            className={cn(
+              lawyer.availability_status === "available"
+                ? "border-green-500 text-green-500"
+                : ""
+            )}
           >
             {lawyer.availability_status}
           </Badge>

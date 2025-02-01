@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Star, CheckCircle, MapPin, Clock, Globe } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 
 type LawyerProfileProps = {
   lawyer: {
@@ -95,9 +96,12 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
             <div className="space-y-2">
               <p className="text-lg font-semibold">${lawyer.hourly_rate}/hour</p>
               <Badge
-                variant={
-                  lawyer.availability_status === "available" ? "success" : "secondary"
-                }
+                variant="outline"
+                className={cn(
+                  lawyer.availability_status === "available"
+                    ? "border-green-500 text-green-500"
+                    : ""
+                )}
               >
                 {lawyer.availability_status}
               </Badge>
