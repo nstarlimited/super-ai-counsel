@@ -216,74 +216,75 @@ export function EmergencyLegalHelp() {
           </div>
         </TabsContent>
 
-      <TabsContent value="resources">
-        <Card>
-          <CardHeader>
-            <CardTitle>Emergency Legal Resources</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {resources.map((resource) => (
-                <Card key={resource.id} className="p-4">
-                  <h3 className="font-semibold text-lg">{resource.title}</h3>
-                  <p className="text-muted-foreground mt-1">{resource.description}</p>
-                  {resource.url && (
-                    <Button variant="link" className="mt-2 p-0" asChild>
-                      <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                        Access Resource
-                      </a>
-                    </Button>
-                  )}
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
+        <TabsContent value="resources">
+          <Card>
+            <CardHeader>
+              <CardTitle>Emergency Legal Resources</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {resources.map((resource) => (
+                  <Card key={resource.id} className="p-4">
+                    <h3 className="font-semibold text-lg">{resource.title}</h3>
+                    <p className="text-muted-foreground mt-1">{resource.description}</p>
+                    {resource.url && (
+                      <Button variant="link" className="mt-2 p-0" asChild>
+                        <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                          Access Resource
+                        </a>
+                      </Button>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      <TabsContent value="directory">
-        <Card>
-          <CardHeader>
-            <CardTitle>Emergency Legal Professionals</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <p className="text-muted-foreground">
-                Contact our emergency response team at 1-800-LEGAL-911
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
+        <TabsContent value="directory">
+          <Card>
+            <CardHeader>
+              <CardTitle>Emergency Legal Professionals</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-muted-foreground">
+                  Contact our emergency response team at 1-800-LEGAL-911
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      <TabsContent value="stories">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <History className="h-5 w-5" />
-              Success Stories
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {stories.map((story) => (
-                <Card key={story.id} className="p-4">
-                  <h3 className="font-semibold text-lg">{story.title}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{story.description}</p>
-                  <div className="mt-2">
-                    <span className="text-sm font-medium">Outcome: </span>
-                    <span className="text-sm text-muted-foreground">{story.outcome}</span>
-                  </div>
-                  <div className="mt-1">
-                    <span className="text-sm font-medium">Case Type: </span>
-                    <span className="text-sm text-muted-foreground">{story.case_type}</span>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
+        <TabsContent value="stories">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <History className="h-5 w-5" />
+                Success Stories
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {stories.map((story) => (
+                  <Card key={story.id} className="p-4">
+                    <h3 className="font-semibold text-lg">{story.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{story.description}</p>
+                    <div className="mt-2">
+                      <span className="text-sm font-medium">Outcome: </span>
+                      <span className="text-sm text-muted-foreground">{story.outcome}</span>
+                    </div>
+                    <div className="mt-1">
+                      <span className="text-sm font-medium">Case Type: </span>
+                      <span className="text-sm text-muted-foreground">{story.case_type}</span>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
