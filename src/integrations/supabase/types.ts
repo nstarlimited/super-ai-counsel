@@ -487,11 +487,14 @@ export type Database = {
           firm_name: string | null
           hourly_rate: number | null
           id: string
+          is_featured: boolean | null
           is_verified: boolean | null
           languages: string[] | null
           location: string | null
           rating: number | null
+          response_time: string | null
           specializations: string[] | null
+          success_rate: number | null
           total_reviews: number | null
           updated_at: string | null
           user_id: string | null
@@ -503,11 +506,14 @@ export type Database = {
           firm_name?: string | null
           hourly_rate?: number | null
           id?: string
+          is_featured?: boolean | null
           is_verified?: boolean | null
           languages?: string[] | null
           location?: string | null
           rating?: number | null
+          response_time?: string | null
           specializations?: string[] | null
+          success_rate?: number | null
           total_reviews?: number | null
           updated_at?: string | null
           user_id?: string | null
@@ -519,11 +525,14 @@ export type Database = {
           firm_name?: string | null
           hourly_rate?: number | null
           id?: string
+          is_featured?: boolean | null
           is_verified?: boolean | null
           languages?: string[] | null
           location?: string | null
           rating?: number | null
+          response_time?: string | null
           specializations?: string[] | null
+          success_rate?: number | null
           total_reviews?: number | null
           updated_at?: string | null
           user_id?: string | null
