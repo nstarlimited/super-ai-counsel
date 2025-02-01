@@ -14,6 +14,17 @@ import { Slider } from "@/components/ui/slider";
 import { LawyerCard } from "@/components/lawyers/LawyerCard";
 import { LawyerProfile } from "@/components/lawyers/LawyerProfile";
 import { useToast } from "@/components/ui/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Grid, List, MapPin, Star, Filter } from "lucide-react";
+import { ComparisonDrawer } from "@/components/lawyers/ComparisonDrawer";
+import { FeaturedLawyers } from "@/components/lawyers/FeaturedLawyers";
+import { RecentlyViewed } from "@/components/lawyers/RecentlyViewed";
+import { LawyerMap } from "@/components/lawyers/LawyerMap";
+
+type ViewMode = "grid" | "list" | "map";
+type SortOption = "rating" | "experience" | "price";
 
 type Lawyer = {
   id: string;
@@ -27,16 +38,30 @@ type Lawyer = {
   total_reviews: number;
   location: string;
   availability_status: string;
+  avatar_url?: string;
+  success_rate?: number;
+  response_time?: string;
+  is_featured?: boolean;
 };
 
 const FindLawyer = () => {
   const { toast } = useToast();
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [sortBy, setSortBy] = useState<SortOption>("rating");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [compareList, setCompareList] = useState<Lawyer[]>([]);
+  const [isCompareDrawerOpen, setIsCompareDrawerOpen] = useState(false);
   const [filters, setFilters] = useState({
     specialization: "",
     location: "",
     priceRange: [0, 1000],
     language: "",
+    minRating: 0,
+    minExperience: 0,
+    radius: 50,
+    isVerified: false,
+    availability: "all",
   });
 
   const { data: lawyers, isLoading } = useQuery({
@@ -44,7 +69,7 @@ const FindLawyer = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("lawyer_profiles")
-        .select("*");
+        .select("*, profiles(avatar_url)");
 
       if (error) {
         toast({
@@ -60,6 +85,12 @@ const FindLawyer = () => {
   });
 
   const filteredLawyers = lawyers?.filter((lawyer) => {
+    const matchesSearch =
+      !searchQuery ||
+      lawyer.firm_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lawyer.specializations.some((s) =>
+        s.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     const matchesSpecialization =
       !filters.specialization ||
       lawyer.specializations.includes(filters.specialization);
@@ -71,18 +102,89 @@ const FindLawyer = () => {
       lawyer.hourly_rate <= filters.priceRange[1];
     const matchesLanguage =
       !filters.language || lawyer.languages.includes(filters.language);
+    const matchesRating = lawyer.rating >= filters.minRating;
+    const matchesExperience = lawyer.years_experience >= filters.minExperience;
+    const matchesVerification = !filters.isVerified || lawyer.is_verified;
+    const matchesAvailability =
+      filters.availability === "all" ||
+      lawyer.availability_status === filters.availability;
 
     return (
-      matchesSpecialization && matchesLocation && matchesPrice && matchesLanguage
+      matchesSearch &&
+      matchesSpecialization &&
+      matchesLocation &&
+      matchesPrice &&
+      matchesLanguage &&
+      matchesRating &&
+      matchesExperience &&
+      matchesVerification &&
+      matchesAvailability
     );
   });
 
+  const sortedLawyers = filteredLawyers?.sort((a, b) => {
+    switch (sortBy) {
+      case "rating":
+        return b.rating - a.rating;
+      case "experience":
+        return b.years_experience - a.years_experience;
+      case "price":
+        return a.hourly_rate - b.hourly_rate;
+      default:
+        return 0;
+    }
+  });
+
+  const handleCompare = (lawyer: Lawyer) => {
+    if (compareList.find((l) => l.id === lawyer.id)) {
+      setCompareList(compareList.filter((l) => l.id !== lawyer.id));
+    } else if (compareList.length < 3) {
+      setCompareList([...compareList, lawyer]);
+    } else {
+      toast({
+        title: "Compare limit reached",
+        description: "You can compare up to 3 lawyers at a time",
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Find a Lawyer</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <h1 className="text-3xl font-bold">Find a Lawyer</h1>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={viewMode === "grid" ? "default" : "outline"}
+            size="icon"
+            onClick={() => setViewMode("grid")}
+          >
+            <Grid className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={viewMode === "list" ? "default" : "outline"}
+            size="icon"
+            onClick={() => setViewMode("list")}
+          >
+            <List className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={viewMode === "map" ? "default" : "outline"}
+            size="icon"
+            onClick={() => setViewMode("map")}
+          >
+            <MapPin className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
 
       {/* Search and Filters */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-white p-4 rounded-lg shadow">
+        <Input
+          placeholder="Search lawyers by name or specialization..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="col-span-full"
+        />
         <Select
           value={filters.specialization}
           onValueChange={(value) =>
@@ -132,22 +234,47 @@ const FindLawyer = () => {
         </Select>
       </div>
 
-      {/* Lawyers Grid */}
-      {isLoading ? (
-        <div className="flex justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredLawyers?.map((lawyer) => (
-            <LawyerCard
-              key={lawyer.id}
-              lawyer={lawyer}
-              onSelect={() => setSelectedLawyer(lawyer)}
-            />
-          ))}
-        </div>
-      )}
+      {/* Featured Lawyers */}
+      <FeaturedLawyers />
+
+      {/* Recently Viewed */}
+      <RecentlyViewed />
+
+      {/* Main Content */}
+      <Tabs defaultValue={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
+        <TabsContent value="grid" className="mt-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedLawyers?.map((lawyer) => (
+              <LawyerCard
+                key={lawyer.id}
+                lawyer={lawyer}
+                onSelect={() => setSelectedLawyer(lawyer)}
+                onCompare={() => handleCompare(lawyer)}
+                isCompared={compareList.some((l) => l.id === lawyer.id)}
+              />
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="list" className="mt-0">
+          <div className="space-y-4">
+            {sortedLawyers?.map((lawyer) => (
+              <LawyerCard
+                key={lawyer.id}
+                lawyer={lawyer}
+                onSelect={() => setSelectedLawyer(lawyer)}
+                onCompare={() => handleCompare(lawyer)}
+                isCompared={compareList.some((l) => l.id === lawyer.id)}
+                viewMode="list"
+              />
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="map" className="mt-0">
+          <LawyerMap lawyers={sortedLawyers || []} onSelect={setSelectedLawyer} />
+        </TabsContent>
+      </Tabs>
 
       {/* Lawyer Profile Dialog */}
       {selectedLawyer && (
@@ -155,6 +282,24 @@ const FindLawyer = () => {
           lawyer={selectedLawyer}
           onClose={() => setSelectedLawyer(null)}
         />
+      )}
+
+      {/* Comparison Drawer */}
+      <ComparisonDrawer
+        lawyers={compareList}
+        isOpen={isCompareDrawerOpen}
+        onClose={() => setIsCompareDrawerOpen(false)}
+        onRemove={(lawyer) => handleCompare(lawyer)}
+      />
+
+      {/* Compare Button */}
+      {compareList.length > 0 && (
+        <Button
+          className="fixed bottom-4 right-4"
+          onClick={() => setIsCompareDrawerOpen(true)}
+        >
+          Compare ({compareList.length})
+        </Button>
       )}
     </div>
   );
