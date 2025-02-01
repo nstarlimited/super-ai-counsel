@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,11 +8,60 @@ import { Shield, Clock, AlertTriangle, Phone, BookOpen, Users, History } from "l
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+interface EmergencyResource {
+  id: string;
+  title: string;
+  description: string;
+  resource_type: string;
+  url: string;
+}
+
+interface SuccessStory {
+  id: string;
+  title: string;
+  description: string;
+  outcome: string;
+  case_type: string;
+}
+
 export function EmergencyLegalHelp() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [resources, setResources] = useState<EmergencyResource[]>([]);
+  const [stories, setStories] = useState<SuccessStory[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchResources();
+    fetchStories();
+  }, []);
+
+  const fetchResources = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('emergency_resources')
+        .select('*');
+      
+      if (error) throw error;
+      setResources(data || []);
+    } catch (error) {
+      console.error('Error fetching resources:', error);
+    }
+  };
+
+  const fetchStories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('success_stories')
+        .select('*');
+      
+      if (error) throw error;
+      setStories(data || []);
+    } catch (error) {
+      console.error('Error fetching success stories:', error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,51 +216,74 @@ export function EmergencyLegalHelp() {
           </div>
         </TabsContent>
 
-        <TabsContent value="resources">
-          <Card>
-            <CardHeader>
-              <CardTitle>Emergency Legal Resources</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Resources will be fetched from emergency_resources table */}
-                <p className="text-muted-foreground">Loading resources...</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+      <TabsContent value="resources">
+        <Card>
+          <CardHeader>
+            <CardTitle>Emergency Legal Resources</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {resources.map((resource) => (
+                <Card key={resource.id} className="p-4">
+                  <h3 className="font-semibold text-lg">{resource.title}</h3>
+                  <p className="text-muted-foreground mt-1">{resource.description}</p>
+                  {resource.url && (
+                    <Button variant="link" className="mt-2 p-0" asChild>
+                      <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                        Access Resource
+                      </a>
+                    </Button>
+                  )}
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
 
-        <TabsContent value="directory">
-          <Card>
-            <CardHeader>
-              <CardTitle>Emergency Legal Professionals</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Directory will be populated from profiles with emergency expertise */}
-                <p className="text-muted-foreground">Loading directory...</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+      <TabsContent value="directory">
+        <Card>
+          <CardHeader>
+            <CardTitle>Emergency Legal Professionals</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                Contact our emergency response team at 1-800-LEGAL-911
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
 
-        <TabsContent value="stories">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
-                Success Stories
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Stories will be fetched from success_stories table */}
-                <p className="text-muted-foreground">Loading success stories...</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      <TabsContent value="stories">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <History className="h-5 w-5" />
+              Success Stories
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {stories.map((story) => (
+                <Card key={story.id} className="p-4">
+                  <h3 className="font-semibold text-lg">{story.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{story.description}</p>
+                  <div className="mt-2">
+                    <span className="text-sm font-medium">Outcome: </span>
+                    <span className="text-sm text-muted-foreground">{story.outcome}</span>
+                  </div>
+                  <div className="mt-1">
+                    <span className="text-sm font-medium">Case Type: </span>
+                    <span className="text-sm text-muted-foreground">{story.case_type}</span>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
     </div>
   );
 }
