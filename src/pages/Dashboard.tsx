@@ -13,6 +13,7 @@ import { JobOpportunities } from "@/components/home/JobOpportunities";
 import CommunityFeatures from "./dashboard/CommunityFeatures";
 import { LegalAITools } from "./dashboard/LegalAITools";
 import { EmergencyLegalHelp } from "./dashboard/EmergencyLegalHelp";
+import FindLawyer from "./dashboard/FindLawyer";
 
 const DashboardHome = () => (
   <div className="max-w-7xl mx-auto space-y-6">
@@ -53,6 +54,7 @@ const Dashboard = () => {
                 <Route path="community/*" element={<CommunityFeatures />} />
                 <Route path="ask-ai" element={<LegalAITools />} />
                 <Route path="emergency" element={<EmergencyLegalHelp />} />
+                <Route path="find-lawyer" element={<FindLawyer />} />
               </Routes>
             </SidebarInset>
           </div>

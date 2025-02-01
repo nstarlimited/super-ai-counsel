@@ -480,6 +480,95 @@ export type Database = {
         }
         Relationships: []
       }
+      lawyer_profiles: {
+        Row: {
+          availability_status: string | null
+          created_at: string | null
+          firm_name: string | null
+          hourly_rate: number | null
+          id: string
+          is_verified: boolean | null
+          languages: string[] | null
+          location: string | null
+          rating: number | null
+          specializations: string[] | null
+          total_reviews: number | null
+          updated_at: string | null
+          user_id: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          availability_status?: string | null
+          created_at?: string | null
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_verified?: boolean | null
+          languages?: string[] | null
+          location?: string | null
+          rating?: number | null
+          specializations?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          availability_status?: string | null
+          created_at?: string | null
+          firm_name?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_verified?: boolean | null
+          languages?: string[] | null
+          location?: string | null
+          rating?: number | null
+          specializations?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      lawyer_reviews: {
+        Row: {
+          created_at: string | null
+          id: string
+          lawyer_id: string | null
+          rating: number | null
+          review_text: string | null
+          reviewer_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          lawyer_id?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          lawyer_id?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lawyer_reviews_lawyer_id_fkey"
+            columns: ["lawyer_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legal_aid_cases: {
         Row: {
           assigned_to: string | null
