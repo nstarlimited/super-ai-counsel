@@ -14,16 +14,14 @@ import { Slider } from "@/components/ui/slider";
 import { LawyerCard } from "@/components/lawyers/LawyerCard";
 import { LawyerProfile } from "@/components/lawyers/LawyerProfile";
 import { useToast } from "@/components/ui/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Grid, List, MapPin, Star, Filter } from "lucide-react";
+import { Grid, List } from "lucide-react";
 import { ComparisonDrawer } from "@/components/lawyers/ComparisonDrawer";
 import { FeaturedLawyers } from "@/components/lawyers/FeaturedLawyers";
 import { RecentlyViewed } from "@/components/lawyers/RecentlyViewed";
-import { LawyerMap } from "@/components/lawyers/LawyerMap";
 
-type ViewMode = "grid" | "list" | "map";
+type ViewMode = "grid" | "list";
 type SortOption = "rating" | "experience" | "price";
 
 type Lawyer = {
@@ -42,6 +40,9 @@ type Lawyer = {
   success_rate?: number;
   response_time?: string;
   is_featured?: boolean;
+  profiles?: {
+    avatar_url: string | null;
+  };
 };
 
 const FindLawyer = () => {
@@ -167,13 +168,6 @@ const FindLawyer = () => {
           >
             <List className="h-4 w-4" />
           </Button>
-          <Button
-            variant={viewMode === "map" ? "default" : "outline"}
-            size="icon"
-            onClick={() => setViewMode("map")}
-          >
-            <MapPin className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 
@@ -247,7 +241,10 @@ const FindLawyer = () => {
             {sortedLawyers?.map((lawyer) => (
               <LawyerCard
                 key={lawyer.id}
-                lawyer={lawyer}
+                lawyer={{
+                  ...lawyer,
+                  avatar_url: lawyer.profiles?.avatar_url || undefined,
+                }}
                 onSelect={() => setSelectedLawyer(lawyer)}
                 onCompare={() => handleCompare(lawyer)}
                 isCompared={compareList.some((l) => l.id === lawyer.id)}
@@ -261,7 +258,10 @@ const FindLawyer = () => {
             {sortedLawyers?.map((lawyer) => (
               <LawyerCard
                 key={lawyer.id}
-                lawyer={lawyer}
+                lawyer={{
+                  ...lawyer,
+                  avatar_url: lawyer.profiles?.avatar_url || undefined,
+                }}
                 onSelect={() => setSelectedLawyer(lawyer)}
                 onCompare={() => handleCompare(lawyer)}
                 isCompared={compareList.some((l) => l.id === lawyer.id)}
@@ -269,10 +269,6 @@ const FindLawyer = () => {
               />
             ))}
           </div>
-        </TabsContent>
-
-        <TabsContent value="map" className="mt-0">
-          <LawyerMap lawyers={sortedLawyers || []} onSelect={setSelectedLawyer} />
         </TabsContent>
       </Tabs>
 
