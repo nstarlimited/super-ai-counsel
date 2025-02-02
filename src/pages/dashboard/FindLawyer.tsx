@@ -242,7 +242,7 @@ export const FindLawyer = () => {
                 key={lawyer.id}
                 lawyer={{
                   ...lawyer,
-                  avatar_url: lawyer.profiles?.avatar_url || undefined,
+                  avatar_url: lawyer.profiles?.avatar_url || lawyer.avatar_url,
                   languages: lawyer.languages || [],
                   is_verified: lawyer.is_verified || false,
                   total_reviews: lawyer.total_reviews || 0,
@@ -264,7 +264,7 @@ export const FindLawyer = () => {
                 key={lawyer.id}
                 lawyer={{
                   ...lawyer,
-                  avatar_url: lawyer.profiles?.avatar_url || undefined,
+                  avatar_url: lawyer.profiles?.avatar_url || lawyer.avatar_url,
                   languages: lawyer.languages || [],
                   is_verified: lawyer.is_verified || false,
                   total_reviews: lawyer.total_reviews || 0,
