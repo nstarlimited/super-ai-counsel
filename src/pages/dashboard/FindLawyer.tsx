@@ -15,7 +15,6 @@ import { LawyerCard } from "@/components/lawyers/LawyerCard";
 import { LawyerProfile } from "@/components/lawyers/LawyerProfile";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Grid, List } from "lucide-react";
 import { ComparisonDrawer } from "@/components/lawyers/ComparisonDrawer";
 import { FeaturedLawyers } from "@/components/lawyers/FeaturedLawyers";
@@ -45,7 +44,7 @@ type Lawyer = {
   };
 };
 
-const FindLawyer = () => {
+export const FindLawyer = () => {
   const { toast } = useToast();
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -244,10 +243,15 @@ const FindLawyer = () => {
                 lawyer={{
                   ...lawyer,
                   avatar_url: lawyer.profiles?.avatar_url || undefined,
+                  languages: lawyer.languages || [],
+                  is_verified: lawyer.is_verified || false,
+                  total_reviews: lawyer.total_reviews || 0,
+                  availability_status: lawyer.availability_status || "unavailable",
                 }}
                 onSelect={() => setSelectedLawyer(lawyer)}
                 onCompare={() => handleCompare(lawyer)}
                 isCompared={compareList.some((l) => l.id === lawyer.id)}
+                viewMode={viewMode}
               />
             ))}
           </div>
@@ -261,6 +265,10 @@ const FindLawyer = () => {
                 lawyer={{
                   ...lawyer,
                   avatar_url: lawyer.profiles?.avatar_url || undefined,
+                  languages: lawyer.languages || [],
+                  is_verified: lawyer.is_verified || false,
+                  total_reviews: lawyer.total_reviews || 0,
+                  availability_status: lawyer.availability_status || "unavailable",
                 }}
                 onSelect={() => setSelectedLawyer(lawyer)}
                 onCompare={() => handleCompare(lawyer)}
