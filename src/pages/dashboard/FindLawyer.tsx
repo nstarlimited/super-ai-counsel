@@ -23,7 +23,7 @@ import { RecentlyViewed } from "@/components/lawyers/RecentlyViewed";
 type ViewMode = "grid" | "list";
 type SortOption = "rating" | "experience" | "price";
 
-type Lawyer = {
+interface Lawyer {
   id: string;
   firm_name: string;
   specializations: string[];
@@ -42,7 +42,7 @@ type Lawyer = {
   profiles?: {
     avatar_url: string | null;
   };
-};
+}
 
 export const FindLawyer = () => {
   const { toast } = useToast();
@@ -101,7 +101,7 @@ export const FindLawyer = () => {
       lawyer.hourly_rate >= filters.priceRange[0] &&
       lawyer.hourly_rate <= filters.priceRange[1];
     const matchesLanguage =
-      !filters.language || lawyer.languages.includes(filters.language);
+      !filters.language || (lawyer.languages || []).includes(filters.language);
     const matchesRating = lawyer.rating >= filters.minRating;
     const matchesExperience = lawyer.years_experience >= filters.minExperience;
     const matchesVerification = !filters.isVerified || lawyer.is_verified;
