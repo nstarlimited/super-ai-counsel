@@ -5,24 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, CheckCircle, Clock, MessageSquare, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MessageModal } from "@/components/community/MessageModal";
+import { Lawyer } from "@/types/lawyer";
 
 type LawyerCardProps = {
-  lawyer: {
-    id: string;
-    firm_name: string;
-    specializations: string[];
-    years_experience: number;
-    hourly_rate: number;
-    is_verified: boolean;
-    rating: number;
-    total_reviews: number;
-    location: string;
-    availability_status: string;
-    avatar_url?: string;
-    success_rate?: number;
-    response_time?: string;
-    is_featured?: boolean;
-  };
+  lawyer: Lawyer;
   onSelect: () => void;
   onCompare?: () => void;
   isCompared?: boolean;

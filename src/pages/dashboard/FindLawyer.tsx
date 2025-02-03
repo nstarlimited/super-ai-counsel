@@ -19,30 +19,10 @@ import { Grid, List } from "lucide-react";
 import { ComparisonDrawer } from "@/components/lawyers/ComparisonDrawer";
 import { FeaturedLawyers } from "@/components/lawyers/FeaturedLawyers";
 import { RecentlyViewed } from "@/components/lawyers/RecentlyViewed";
+import { Lawyer } from "@/types/lawyer";
 
 type ViewMode = "grid" | "list";
 type SortOption = "rating" | "experience" | "price";
-
-interface Lawyer {
-  id: string;
-  firm_name: string;
-  specializations: string[];
-  years_experience: number;
-  languages: string[];
-  hourly_rate: number;
-  is_verified: boolean;
-  rating: number;
-  total_reviews: number;
-  location: string;
-  availability_status: string;
-  avatar_url?: string;
-  success_rate?: number;
-  response_time?: string;
-  is_featured?: boolean;
-  profiles?: {
-    avatar_url: string | null;
-  };
-}
 
 export const FindLawyer = () => {
   const { toast } = useToast();
