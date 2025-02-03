@@ -6,7 +6,18 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, CheckCircle, MapPin, Clock, Globe, Video, FileText, DollarSign } from "lucide-react";
+import { 
+  Star, 
+  CheckCircle, 
+  MapPin, 
+  Clock, 
+  Globe, 
+  Video, 
+  FileText, 
+  DollarSign,
+  ShieldCheck,
+  Calendar
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -14,36 +25,9 @@ import { LawyerCredentials } from "./LawyerCredentials";
 import { LawyerStats } from "./LawyerStats";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-type LawyerProfileProps = {
-  lawyer: {
-    id: string;
-    firm_name: string;
-    specializations: string[];
-    years_experience: number;
-    languages: string[];
-    hourly_rate: number;
-    is_verified: boolean;
-    rating: number;
-    total_reviews: number;
-    location: string;
-    availability_status: string;
-    avatar_url?: string;
-    success_rate?: number;
-    response_time?: string;
-    education?: any[];
-    certifications?: any[];
-    bar_memberships?: any[];
-    awards?: any[];
-    professional_associations?: any[];
-    consultation_fee?: number;
-    video_consultation_available?: boolean;
-    accepts_document_sharing?: boolean;
-  };
-  onClose: () => void;
-};
-
-export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
+export const LawyerProfile = ({ lawyer, onClose }: { lawyer: any; onClose: () => void }) => {
   const { data: reviews } = useQuery({
     queryKey: ["lawyer-reviews", lawyer.id],
     queryFn: async () => {
@@ -59,8 +43,7 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
           )
         `)
         .eq("lawyer_id", lawyer.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       return data;
@@ -81,7 +64,7 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
           <div className="flex items-start gap-4">
             <Avatar className="h-20 w-20">
               <AvatarImage src={lawyer.avatar_url} alt={lawyer.firm_name} />
-              <AvatarFallback>{getInitials(lawyer.firm_name)}</AvatarFallback>
+              <AvatarFallback>{getInitials(lawyer.firm_name || '')}</AvatarFallback>
             </Avatar>
             <div className="space-y-2">
               <DialogTitle className="flex items-center gap-2">
@@ -89,12 +72,15 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
                 {lawyer.is_verified && (
                   <CheckCircle className="h-5 w-5 text-blue-500" />
                 )}
+                {lawyer.liability_insurance_verified && (
+                  <ShieldCheck className="h-5 w-5 text-green-500" title="Liability Insurance Verified" />
+                )}
               </DialogTitle>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-1">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                   <span>
-                    {lawyer.rating.toFixed(1)} ({lawyer.total_reviews} reviews)
+                    {lawyer.rating?.toFixed(1)} ({lawyer.total_reviews} reviews)
                   </span>
                 </div>
                 <Badge
@@ -112,13 +98,18 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
           </div>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          <div className="lg:col-span-2 space-y-6">
-            {/* Specializations */}
+        <Tabs defaultValue="overview" className="mt-6">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="credentials">Credentials</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
             <div className="space-y-2">
               <h3 className="font-semibold">Specializations</h3>
               <div className="flex flex-wrap gap-2">
-                {lawyer.specializations.map((specialization) => (
+                {lawyer.specializations?.map((specialization: string) => (
                   <Badge key={specialization} variant="secondary">
                     {specialization}
                   </Badge>
@@ -126,7 +117,6 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
               </div>
             </div>
 
-            {/* Key Information */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
@@ -139,7 +129,7 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Globe className="h-4 w-4" />
-                  <span>{lawyer.languages.join(", ")}</span>
+                  <span>{lawyer.languages?.join(", ")}</span>
                 </div>
               </div>
               <div className="space-y-2">
@@ -172,17 +162,15 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
 
             <Separator />
 
-            {/* Stats */}
             <LawyerStats
               successRate={lawyer.success_rate || 0}
               responseTime={lawyer.response_time || "N/A"}
-              totalClients={lawyer.total_reviews}
-              experienceYears={lawyer.years_experience}
+              totalClients={lawyer.total_reviews || 0}
+              experienceYears={lawyer.years_experience || 0}
             />
+          </TabsContent>
 
-            <Separator />
-
-            {/* Credentials */}
+          <TabsContent value="credentials">
             <LawyerCredentials
               education={lawyer.education || []}
               certifications={lawyer.certifications || []}
@@ -190,11 +178,10 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
               awards={lawyer.awards || []}
               associations={lawyer.professional_associations || []}
             />
-          </div>
+          </TabsContent>
 
-          {/* Reviews Section */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Recent Reviews</h3>
+          <TabsContent value="reviews" className="space-y-4">
+            <h3 className="font-semibold text-lg">Client Reviews</h3>
             <div className="space-y-4">
               {reviews?.map((review: any) => (
                 <div key={review.id} className="border rounded-lg p-4">
@@ -243,13 +230,16 @@ export const LawyerProfile = ({ lawyer, onClose }: LawyerProfileProps) => {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
 
-        {/* Action Buttons */}
         <div className="flex gap-4 mt-6">
-          <Button className="flex-1">Book Consultation</Button>
+          <Button className="flex-1" onClick={() => {}}>
+            <Calendar className="h-4 w-4 mr-2" />
+            Book Consultation
+          </Button>
           <Button variant="outline" className="flex-1">
+            <MessageSquare className="h-4 w-4 mr-2" />
             Send Message
           </Button>
         </div>
