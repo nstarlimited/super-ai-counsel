@@ -3,10 +3,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
 } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
