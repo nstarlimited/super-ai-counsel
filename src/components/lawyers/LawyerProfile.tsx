@@ -3,6 +3,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,7 +31,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const LawyerProfile = ({ lawyer, onClose }: { lawyer: any; onClose: () => void }) => {
+type LawyerProfileProps = {
+  lawyer: Lawyer;
+  onClose: () => void;
+  onBookConsultation: () => void;
+};
+
+export const LawyerProfile = ({ lawyer, onClose, onBookConsultation }: LawyerProfileProps) => {
   const { data: reviews } = useQuery({
     queryKey: ["lawyer-reviews", lawyer.id],
     queryFn: async () => {
@@ -240,7 +249,7 @@ export const LawyerProfile = ({ lawyer, onClose }: { lawyer: any; onClose: () =>
         </Tabs>
 
         <div className="flex gap-4 mt-6">
-          <Button className="flex-1" onClick={() => {}}>
+          <Button className="flex-1" onClick={onBookConsultation}>
             <Calendar className="h-4 w-4 mr-2" />
             Book Consultation
           </Button>

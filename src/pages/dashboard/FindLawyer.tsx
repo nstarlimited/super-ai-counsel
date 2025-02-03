@@ -20,6 +20,8 @@ import { ComparisonDrawer } from "@/components/lawyers/ComparisonDrawer";
 import { FeaturedLawyers } from "@/components/lawyers/FeaturedLawyers";
 import { RecentlyViewed } from "@/components/lawyers/RecentlyViewed";
 import { Lawyer } from "@/types/lawyer";
+import { JoinAsLawyer } from "@/components/lawyers/JoinAsLawyer";
+import { ConsultationBooking } from "@/components/lawyers/ConsultationBooking";
 
 type ViewMode = "grid" | "list";
 type SortOption = "rating" | "experience" | "price";
@@ -43,6 +45,7 @@ export const FindLawyer = () => {
     isVerified: false,
     availability: "all",
   });
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   const { data: lawyers, isLoading } = useQuery({
     queryKey: ["lawyers"],
@@ -131,7 +134,9 @@ export const FindLawyer = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <h1 className="text-3xl font-bold">Find a Lawyer</h1>
+        <div className="flex items-center gap-4">
+          <JoinAsLawyer />
+        </div>
         <div className="flex items-center gap-2">
           <Button
             variant={viewMode === "grid" ? "default" : "outline"}
@@ -262,10 +267,18 @@ export const FindLawyer = () => {
 
       {/* Lawyer Profile Dialog */}
       {selectedLawyer && (
-        <LawyerProfile
-          lawyer={selectedLawyer}
-          onClose={() => setSelectedLawyer(null)}
-        />
+        <>
+          <LawyerProfile
+            lawyer={selectedLawyer}
+            onClose={() => setSelectedLawyer(null)}
+            onBookConsultation={() => setIsBookingOpen(true)}
+          />
+          <ConsultationBooking
+            lawyer={selectedLawyer}
+            isOpen={isBookingOpen}
+            onClose={() => setIsBookingOpen(false)}
+          />
+        </>
       )}
 
       {/* Comparison Drawer */}
