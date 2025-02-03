@@ -6,6 +6,7 @@ import { Star, CheckCircle, Clock, MessageSquare, Heart, Video, FileText, Dollar
 import { cn } from "@/lib/utils";
 import { MessageModal } from "@/components/community/MessageModal";
 import { Lawyer } from "@/types/lawyer";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type LawyerCardProps = {
   lawyer: Lawyer;
@@ -35,18 +36,30 @@ export const LawyerCard = ({
       <CardHeader className={cn("space-y-1", isListView && "flex-shrink-0")}>
         <div className="flex items-center gap-4">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={lawyer.avatar_url} alt={lawyer.firm_name} />
+            <AvatarImage src={lawyer.profiles?.avatar_url || lawyer.avatar_url} alt={lawyer.firm_name || ''} />
             <AvatarFallback>{lawyer.firm_name?.[0]}</AvatarFallback>
           </Avatar>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <h3 className="text-xl font-bold">{lawyer.firm_name}</h3>
-              {lawyer.is_verified && (
-                <CheckCircle className="h-5 w-5 text-blue-500" />
-              )}
-              {lawyer.liability_insurance_verified && (
-                <ShieldCheck className="h-5 w-5 text-green-500" title="Liability Insurance Verified" />
-              )}
+              <TooltipProvider>
+                {lawyer.is_verified && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <CheckCircle className="h-5 w-5 text-blue-500" />
+                    </TooltipTrigger>
+                    <TooltipContent>Verified Profile</TooltipContent>
+                  </Tooltip>
+                )}
+                {lawyer.liability_insurance_verified && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <ShieldCheck className="h-5 w-5 text-green-500" />
+                    </TooltipTrigger>
+                    <TooltipContent>Liability Insurance Verified</TooltipContent>
+                  </Tooltip>
+                )}
+              </TooltipProvider>
               {lawyer.is_featured && (
                 <Badge variant="secondary">Featured</Badge>
               )}

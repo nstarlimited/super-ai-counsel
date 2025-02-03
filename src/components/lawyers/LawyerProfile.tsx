@@ -16,7 +16,8 @@ import {
   FileText, 
   DollarSign,
   ShieldCheck,
-  Calendar
+  Calendar,
+  MessageSquare
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -73,7 +74,12 @@ export const LawyerProfile = ({ lawyer, onClose }: { lawyer: any; onClose: () =>
                   <CheckCircle className="h-5 w-5 text-blue-500" />
                 )}
                 {lawyer.liability_insurance_verified && (
-                  <ShieldCheck className="h-5 w-5 text-green-500" title="Liability Insurance Verified" />
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <ShieldCheck className="h-5 w-5 text-green-500" />
+                    </TooltipTrigger>
+                    <TooltipContent>Liability Insurance Verified</TooltipContent>
+                  </Tooltip>
                 )}
               </DialogTitle>
               <div className="flex items-center space-x-4">
