@@ -480,17 +480,77 @@ export type Database = {
         }
         Relationships: []
       }
+      lawyer_consultations: {
+        Row: {
+          client_id: string | null
+          consultation_type: string
+          created_at: string
+          duration_minutes: number
+          id: string
+          lawyer_id: string | null
+          payment_amount: number
+          payment_status: string | null
+          scheduled_at: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          consultation_type: string
+          created_at?: string
+          duration_minutes: number
+          id?: string
+          lawyer_id?: string | null
+          payment_amount: number
+          payment_status?: string | null
+          scheduled_at: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          consultation_type?: string
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          lawyer_id?: string | null
+          payment_amount?: number
+          payment_status?: string | null
+          scheduled_at?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lawyer_consultations_lawyer_id_fkey"
+            columns: ["lawyer_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lawyer_profiles: {
         Row: {
+          accepts_document_sharing: boolean | null
           availability_status: string | null
+          awards: Json | null
+          bar_memberships: Json | null
+          case_history: Json | null
+          certifications: Json | null
+          consultation_fee: number | null
           created_at: string | null
+          education: Json | null
           firm_name: string | null
           hourly_rate: number | null
           id: string
           is_featured: boolean | null
           is_verified: boolean | null
           languages: string[] | null
+          liability_insurance_verified: boolean | null
           location: string | null
+          membership_type: string | null
+          professional_associations: Json | null
           rating: number | null
           response_time: string | null
           specializations: string[] | null
@@ -498,18 +558,31 @@ export type Database = {
           total_reviews: number | null
           updated_at: string | null
           user_id: string | null
+          verification_documents: Json | null
+          verification_status: string | null
+          video_consultation_available: boolean | null
           years_experience: number | null
         }
         Insert: {
+          accepts_document_sharing?: boolean | null
           availability_status?: string | null
+          awards?: Json | null
+          bar_memberships?: Json | null
+          case_history?: Json | null
+          certifications?: Json | null
+          consultation_fee?: number | null
           created_at?: string | null
+          education?: Json | null
           firm_name?: string | null
           hourly_rate?: number | null
           id?: string
           is_featured?: boolean | null
           is_verified?: boolean | null
           languages?: string[] | null
+          liability_insurance_verified?: boolean | null
           location?: string | null
+          membership_type?: string | null
+          professional_associations?: Json | null
           rating?: number | null
           response_time?: string | null
           specializations?: string[] | null
@@ -517,18 +590,31 @@ export type Database = {
           total_reviews?: number | null
           updated_at?: string | null
           user_id?: string | null
+          verification_documents?: Json | null
+          verification_status?: string | null
+          video_consultation_available?: boolean | null
           years_experience?: number | null
         }
         Update: {
+          accepts_document_sharing?: boolean | null
           availability_status?: string | null
+          awards?: Json | null
+          bar_memberships?: Json | null
+          case_history?: Json | null
+          certifications?: Json | null
+          consultation_fee?: number | null
           created_at?: string | null
+          education?: Json | null
           firm_name?: string | null
           hourly_rate?: number | null
           id?: string
           is_featured?: boolean | null
           is_verified?: boolean | null
           languages?: string[] | null
+          liability_insurance_verified?: boolean | null
           location?: string | null
+          membership_type?: string | null
+          professional_associations?: Json | null
           rating?: number | null
           response_time?: string | null
           specializations?: string[] | null
@@ -536,6 +622,9 @@ export type Database = {
           total_reviews?: number | null
           updated_at?: string | null
           user_id?: string | null
+          verification_documents?: Json | null
+          verification_status?: string | null
+          video_consultation_available?: boolean | null
           years_experience?: number | null
         }
         Relationships: [
@@ -544,6 +633,41 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lawyer_review_categories: {
+        Row: {
+          communication_rating: number | null
+          created_at: string
+          id: string
+          knowledge_rating: number | null
+          review_id: string | null
+          value_rating: number | null
+        }
+        Insert: {
+          communication_rating?: number | null
+          created_at?: string
+          id?: string
+          knowledge_rating?: number | null
+          review_id?: string | null
+          value_rating?: number | null
+        }
+        Update: {
+          communication_rating?: number | null
+          created_at?: string
+          id?: string
+          knowledge_rating?: number | null
+          review_id?: string | null
+          value_rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lawyer_review_categories_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_reviews"
             referencedColumns: ["id"]
           },
         ]
