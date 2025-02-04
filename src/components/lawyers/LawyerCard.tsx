@@ -31,8 +31,8 @@ export const LawyerCard = ({
   return (
     <Card
       className={cn(
-        "hover:shadow-lg transition-shadow",
-        isListView && "flex flex-row items-start gap-4",
+        "hover:shadow-lg transition-shadow flex flex-col",
+        isListView && "flex-row items-start gap-4",
         lawyer.is_featured && "border-primary"
       )}
     >
@@ -76,7 +76,11 @@ export const LawyerCard = ({
           </div>
         </div>
       </CardHeader>
-      <CardContent className={cn("space-y-4", isListView && "flex-grow")}>
+      
+      <CardContent className={cn(
+        "space-y-4",
+        isListView ? "flex-grow" : "flex-1",
+      )}>
         <div className="flex flex-wrap gap-2">
           {lawyer.specializations?.map((specialization) => (
             <Badge key={specialization} variant="secondary">
@@ -139,16 +143,33 @@ export const LawyerCard = ({
           </div>
         </div>
       </CardContent>
+
       <CardFooter
         className={cn(
-          "flex gap-2",
-          isListView ? "flex-col items-start" : "flex-row items-center justify-between"
+          "mt-auto border-t pt-4",
+          isListView 
+            ? "flex flex-col items-start gap-2 w-full" 
+            : "flex flex-row items-center justify-between gap-2"
         )}
       >
-        <Button onClick={onSelect} className="flex-1">
-          View Profile
-        </Button>
-        <div className="flex gap-2">
+        <div className={cn(
+          "flex gap-2",
+          isListView ? "w-full" : "flex-1"
+        )}>
+          <Button 
+            onClick={onSelect} 
+            className={cn(
+              "flex-1",
+              isListView && "w-full"
+            )}
+          >
+            View Profile
+          </Button>
+        </div>
+        <div className={cn(
+          "flex gap-2",
+          isListView && "w-full justify-end"
+        )}>
           <MessageModal recipientId={lawyer.id} recipientName={lawyer.firm_name || ''} />
           <Button variant="outline" size="icon">
             <Heart className="h-4 w-4" />

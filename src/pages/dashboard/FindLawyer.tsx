@@ -359,20 +359,22 @@ export const FindLawyer = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Dialogs and Drawers */}
+      {/* Profile Modal */}
       {selectedLawyer && (
-        <>
-          <LawyerProfile
-            lawyer={selectedLawyer}
-            onClose={() => setSelectedLawyer(null)}
-            onBookConsultation={() => setIsBookingOpen(true)}
-          />
-          <ConsultationBooking
-            lawyer={selectedLawyer}
-            isOpen={isBookingOpen}
-            onClose={() => setIsBookingOpen(false)}
-          />
-        </>
+        <LawyerProfile
+          lawyer={selectedLawyer}
+          onClose={() => setSelectedLawyer(null)}
+          onBookConsultation={() => setIsBookingOpen(true)}
+        />
+      )}
+
+      {/* Consultation Booking Modal */}
+      {selectedLawyer && isBookingOpen && (
+        <ConsultationBooking
+          lawyer={selectedLawyer}
+          isOpen={isBookingOpen}
+          onClose={() => setIsBookingOpen(false)}
+        />
       )}
 
       {/* Comparison Drawer */}
