@@ -24,6 +24,10 @@ import { TrendingLawyers } from "@/components/lawyers/TrendingLawyers";
 import { UrgentLegalHelp } from "@/components/lawyers/UrgentLegalHelp";
 import { CategoryBasedLawyers } from "@/components/lawyers/CategoryBasedLawyers";
 import { RecentlyViewed } from "@/components/lawyers/RecentlyViewed";
+import { VerifiedLawyers } from "@/components/lawyers/VerifiedLawyers";
+import { RecentSearches } from "@/components/lawyers/RecentSearches";
+import { CommunityRecommended } from "@/components/lawyers/CommunityRecommended";
+import { MultilingualLawyers } from "@/components/lawyers/MultilingualLawyers";
 import { Lawyer } from "@/types/lawyer";
 import { JoinAsLawyer } from "@/components/lawyers/JoinAsLawyer";
 import { ConsultationBooking } from "@/components/lawyers/ConsultationBooking";
@@ -71,7 +75,7 @@ export const FindLawyer = () => {
       return data.map((lawyer): Lawyer => ({
         id: lawyer.id,
         user_id: lawyer.user_id,
-        firm_name: lawyer.firm_name || '',
+        firm_name: lawyer.firm_name || "",
         specializations: lawyer.specializations || [],
         years_experience: lawyer.years_experience || 0,
         languages: lawyer.languages || [],
@@ -79,13 +83,13 @@ export const FindLawyer = () => {
         is_verified: lawyer.is_verified || false,
         rating: Number(lawyer.rating) || 0,
         total_reviews: lawyer.total_reviews || 0,
-        location: lawyer.location || '',
-        availability_status: lawyer.availability_status || 'unavailable',
+        location: lawyer.location || "",
+        availability_status: lawyer.availability_status || "unavailable",
         created_at: lawyer.created_at,
         updated_at: lawyer.updated_at,
         is_featured: lawyer.is_featured || false,
         success_rate: lawyer.success_rate || 0,
-        response_time: lawyer.response_time || '',
+        response_time: lawyer.response_time || "",
         education: lawyer.education || [],
         certifications: lawyer.certifications || [],
         bar_memberships: lawyer.bar_memberships || [],
@@ -95,9 +99,9 @@ export const FindLawyer = () => {
         video_consultation_available: lawyer.video_consultation_available || false,
         accepts_document_sharing: lawyer.accepts_document_sharing || false,
         liability_insurance_verified: lawyer.liability_insurance_verified || false,
-        membership_type: lawyer.membership_type || 'basic',
+        membership_type: lawyer.membership_type || "basic",
         case_history: lawyer.case_history || [],
-        verification_status: lawyer.verification_status || 'pending',
+        verification_status: lawyer.verification_status || "pending",
         verification_documents: lawyer.verification_documents || [],
         profiles: lawyer.profiles,
         avatar_url: lawyer.profiles?.avatar_url,
@@ -251,25 +255,19 @@ export const FindLawyer = () => {
         </Select>
       </div>
 
-      {/* Featured Lawyers */}
+      {/* New Sections */}
+      <VerifiedLawyers />
+      <RecentSearches />
+      <CommunityRecommended />
+      <MultilingualLawyers />
+
+      {/* Existing Sections */}
       <FeaturedLawyers />
-
-      {/* Top Rated Lawyers */}
       <TopRatedLawyers />
-
-      {/* Nearby Lawyers */}
       <NearbyLawyers />
-
-      {/* Urgent Legal Help */}
       <UrgentLegalHelp />
-
-      {/* Trending Lawyers */}
       <TrendingLawyers />
-
-      {/* Category Based Lawyers */}
       <CategoryBasedLawyers />
-
-      {/* Recently Viewed */}
       <RecentlyViewed />
 
       {/* Main Content */}
