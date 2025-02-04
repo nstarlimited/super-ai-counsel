@@ -277,14 +277,7 @@ export const FindLawyer = () => {
             {sortedLawyers?.map((lawyer) => (
               <LawyerCard
                 key={lawyer.id}
-                lawyer={{
-                  ...lawyer,
-                  avatar_url: lawyer.profiles?.avatar_url || lawyer.avatar_url,
-                  languages: lawyer.languages || [],
-                  is_verified: lawyer.is_verified || false,
-                  total_reviews: lawyer.total_reviews || 0,
-                  availability_status: lawyer.availability_status || "unavailable",
-                }}
+                lawyer={lawyer}
                 onSelect={() => setSelectedLawyer(lawyer)}
                 onCompare={() => handleCompare(lawyer)}
                 isCompared={compareList.some((l) => l.id === lawyer.id)}
@@ -299,14 +292,7 @@ export const FindLawyer = () => {
             {sortedLawyers?.map((lawyer) => (
               <LawyerCard
                 key={lawyer.id}
-                lawyer={{
-                  ...lawyer,
-                  avatar_url: lawyer.profiles?.avatar_url || lawyer.avatar_url,
-                  languages: lawyer.languages || [],
-                  is_verified: lawyer.is_verified || false,
-                  total_reviews: lawyer.total_reviews || 0,
-                  availability_status: lawyer.availability_status || "unavailable",
-                }}
+                lawyer={lawyer}
                 onSelect={() => setSelectedLawyer(lawyer)}
                 onCompare={() => handleCompare(lawyer)}
                 isCompared={compareList.some((l) => l.id === lawyer.id)}
