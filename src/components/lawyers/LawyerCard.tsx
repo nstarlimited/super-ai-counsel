@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { MessageModal } from "@/components/community/MessageModal";
 import { Lawyer } from "@/types/lawyer";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getCurrencyByCountry } from "@/utils/currencies";
 
 type LawyerCardProps = {
   lawyer: Lawyer;
@@ -24,6 +25,8 @@ export const LawyerCard = ({
   viewMode = "grid",
 }: LawyerCardProps) => {
   const isListView = viewMode === "list";
+  const countryCode = lawyer.location?.split(',').pop()?.trim() || 'US';
+  const currency = getCurrencyByCountry(countryCode);
 
   return (
     <Card
@@ -88,10 +91,10 @@ export const LawyerCard = ({
           </p>
           <div className="flex items-center gap-2">
             <DollarSign className="h-4 w-4" />
-            <span className="font-medium">${lawyer.hourly_rate}/hour</span>
+            <span className="font-medium">{currency.symbol}{lawyer.hourly_rate}/hour</span>
             {lawyer.consultation_fee && (
               <span className="text-muted-foreground">
-                (${lawyer.consultation_fee} consultation)
+                ({currency.symbol}{lawyer.consultation_fee} consultation)
               </span>
             )}
           </div>
@@ -139,7 +142,7 @@ export const LawyerCard = ({
       <CardFooter
         className={cn(
           "flex gap-2",
-          isListView ? "flex-col items-start" : "flex-row items-center"
+          isListView ? "flex-col items-start" : "flex-row items-center justify-between"
         )}
       >
         <Button onClick={onSelect} className="flex-1">

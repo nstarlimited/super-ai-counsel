@@ -31,6 +31,8 @@ import { MultilingualLawyers } from "@/components/lawyers/MultilingualLawyers";
 import { Lawyer } from "@/types/lawyer";
 import { JoinAsLawyer } from "@/components/lawyers/JoinAsLawyer";
 import { ConsultationBooking } from "@/components/lawyers/ConsultationBooking";
+import { LocationFilter } from "@/components/lawyers/LocationFilter";
+import { currencies, getCurrencyByCountry } from "@/utils/currencies";
 
 type ViewMode = "grid" | "list";
 type SortOption = "rating" | "experience" | "price";
@@ -43,9 +45,14 @@ export const FindLawyer = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [compareList, setCompareList] = useState<Lawyer[]>([]);
   const [isCompareDrawerOpen, setIsCompareDrawerOpen] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const [filters, setFilters] = useState({
     specialization: "",
-    location: "",
+    location: {
+      country: "",
+      state: "",
+      city: "",
+    },
     priceRange: [0, 1000],
     language: "",
     minRating: 0,
@@ -109,6 +116,14 @@ export const FindLawyer = () => {
     },
   });
 
+  const handleLocationChange = (location: { country: string; state: string; city: string }) => {
+    setFilters({ ...filters, location });
+    // Update currency based on selected country
+    if (location.country) {
+      setSelectedCurrency(getCurrencyByCountry(location.country));
+    }
+  };
+
   const filteredLawyers = lawyers?.filter((lawyer) => {
     const matchesSearch =
       !searchQuery ||
@@ -120,8 +135,8 @@ export const FindLawyer = () => {
       !filters.specialization ||
       lawyer.specializations.includes(filters.specialization);
     const matchesLocation =
-      !filters.location ||
-      lawyer.location.toLowerCase().includes(filters.location.toLowerCase());
+      !filters.location.country ||
+      lawyer.location.toLowerCase().includes(filters.location.country.toLowerCase());
     const matchesPrice =
       lawyer.hourly_rate >= filters.priceRange[0] &&
       lawyer.hourly_rate <= filters.priceRange[1];
@@ -199,38 +214,52 @@ export const FindLawyer = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-white p-4 rounded-lg shadow">
+      <div className="space-y-4 bg-white p-6 rounded-lg shadow">
         <Input
           placeholder="Search lawyers by name or specialization..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="col-span-full"
+          className="w-full"
         />
-        <Select
-          value={filters.specialization}
-          onValueChange={(value) =>
-            setFilters({ ...filters, specialization: value })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Specialization" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="criminal">Criminal Law</SelectItem>
-            <SelectItem value="corporate">Corporate Law</SelectItem>
-            <SelectItem value="family">Family Law</SelectItem>
-            <SelectItem value="immigration">Immigration Law</SelectItem>
-          </SelectContent>
-        </Select>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Select
+            value={filters.specialization}
+            onValueChange={(value) =>
+              setFilters({ ...filters, specialization: value })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Specialization" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              <SelectItem value="criminal">Criminal Law</SelectItem>
+              <SelectItem value="corporate">Corporate Law</SelectItem>
+              <SelectItem value="family">Family Law</SelectItem>
+              <SelectItem value="immigration">Immigration Law</SelectItem>
+            </SelectContent>
+          </Select>
 
-        <Input
-          placeholder="Location"
-          value={filters.location}
-          onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-        />
+          <Select
+            value={filters.language}
+            onValueChange={(value) => setFilters({ ...filters, language: value })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Language" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              <SelectItem value="english">English</SelectItem>
+              <SelectItem value="spanish">Spanish</SelectItem>
+              <SelectItem value="french">French</SelectItem>
+              <SelectItem value="mandarin">Mandarin</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <LocationFilter onLocationChange={handleLocationChange} />
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Price Range</label>
+          <label className="text-sm font-medium">Price Range ({selectedCurrency.symbol})</label>
           <Slider
             defaultValue={[0, 1000]}
             max={1000}
@@ -239,20 +268,27 @@ export const FindLawyer = () => {
           />
         </div>
 
-        <Select
-          value={filters.language}
-          onValueChange={(value) => setFilters({ ...filters, language: value })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Language" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="english">English</SelectItem>
-            <SelectItem value="spanish">Spanish</SelectItem>
-            <SelectItem value="french">French</SelectItem>
-            <SelectItem value="mandarin">Mandarin</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex justify-end">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setFilters({
+                specialization: "",
+                location: { country: "", state: "", city: "" },
+                priceRange: [0, 1000],
+                language: "",
+                minRating: 0,
+                minExperience: 0,
+                radius: 50,
+                isVerified: false,
+                availability: "all",
+              });
+              setSearchQuery("");
+            }}
+          >
+            Clear Filters
+          </Button>
+        </div>
       </div>
 
       {/* New Sections */}
