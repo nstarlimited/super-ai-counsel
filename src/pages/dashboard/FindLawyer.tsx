@@ -18,6 +18,11 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Grid, List } from "lucide-react";
 import { ComparisonDrawer } from "@/components/lawyers/ComparisonDrawer";
 import { FeaturedLawyers } from "@/components/lawyers/FeaturedLawyers";
+import { TopRatedLawyers } from "@/components/lawyers/TopRatedLawyers";
+import { NearbyLawyers } from "@/components/lawyers/NearbyLawyers";
+import { TrendingLawyers } from "@/components/lawyers/TrendingLawyers";
+import { UrgentLegalHelp } from "@/components/lawyers/UrgentLegalHelp";
+import { CategoryBasedLawyers } from "@/components/lawyers/CategoryBasedLawyers";
 import { RecentlyViewed } from "@/components/lawyers/RecentlyViewed";
 import { Lawyer } from "@/types/lawyer";
 import { JoinAsLawyer } from "@/components/lawyers/JoinAsLawyer";
@@ -165,7 +170,8 @@ export const FindLawyer = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-6 space-y-8">
+      {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
           <JoinAsLawyer />
@@ -248,6 +254,21 @@ export const FindLawyer = () => {
       {/* Featured Lawyers */}
       <FeaturedLawyers />
 
+      {/* Top Rated Lawyers */}
+      <TopRatedLawyers />
+
+      {/* Nearby Lawyers */}
+      <NearbyLawyers />
+
+      {/* Urgent Legal Help */}
+      <UrgentLegalHelp />
+
+      {/* Trending Lawyers */}
+      <TrendingLawyers />
+
+      {/* Category Based Lawyers */}
+      <CategoryBasedLawyers />
+
       {/* Recently Viewed */}
       <RecentlyViewed />
 
@@ -298,7 +319,7 @@ export const FindLawyer = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Lawyer Profile Dialog */}
+      {/* Dialogs and Drawers */}
       {selectedLawyer && (
         <>
           <LawyerProfile

@@ -530,26 +530,64 @@ export type Database = {
           },
         ]
       }
+      lawyer_favorites: {
+        Row: {
+          created_at: string | null
+          id: string
+          lawyer_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          lawyer_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          lawyer_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lawyer_favorites_lawyer_id_fkey"
+            columns: ["lawyer_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lawyer_profiles: {
         Row: {
           accepts_document_sharing: boolean | null
           availability_status: string | null
           awards: Json | null
           bar_memberships: Json | null
+          booking_count: number | null
           case_history: Json | null
+          category_ratings: Json | null
           certifications: Json | null
           consultation_fee: number | null
           created_at: string | null
           education: Json | null
+          emergency_services: boolean | null
           firm_name: string | null
           hourly_rate: number | null
           id: string
+          immediate_consultation: boolean | null
+          in_person_consultation_fee: number | null
           is_featured: boolean | null
           is_verified: boolean | null
+          language_proficiency: Json | null
           languages: string[] | null
+          last_active: string | null
           liability_insurance_verified: boolean | null
           location: string | null
           membership_type: string | null
+          monthly_booking_count: number | null
+          online_consultation_fee: number | null
           professional_associations: Json | null
           rating: number | null
           response_time: string | null
@@ -561,6 +599,7 @@ export type Database = {
           verification_documents: Json | null
           verification_status: string | null
           video_consultation_available: boolean | null
+          weekly_booking_count: number | null
           years_experience: number | null
         }
         Insert: {
@@ -568,20 +607,29 @@ export type Database = {
           availability_status?: string | null
           awards?: Json | null
           bar_memberships?: Json | null
+          booking_count?: number | null
           case_history?: Json | null
+          category_ratings?: Json | null
           certifications?: Json | null
           consultation_fee?: number | null
           created_at?: string | null
           education?: Json | null
+          emergency_services?: boolean | null
           firm_name?: string | null
           hourly_rate?: number | null
           id?: string
+          immediate_consultation?: boolean | null
+          in_person_consultation_fee?: number | null
           is_featured?: boolean | null
           is_verified?: boolean | null
+          language_proficiency?: Json | null
           languages?: string[] | null
+          last_active?: string | null
           liability_insurance_verified?: boolean | null
           location?: string | null
           membership_type?: string | null
+          monthly_booking_count?: number | null
+          online_consultation_fee?: number | null
           professional_associations?: Json | null
           rating?: number | null
           response_time?: string | null
@@ -593,6 +641,7 @@ export type Database = {
           verification_documents?: Json | null
           verification_status?: string | null
           video_consultation_available?: boolean | null
+          weekly_booking_count?: number | null
           years_experience?: number | null
         }
         Update: {
@@ -600,20 +649,29 @@ export type Database = {
           availability_status?: string | null
           awards?: Json | null
           bar_memberships?: Json | null
+          booking_count?: number | null
           case_history?: Json | null
+          category_ratings?: Json | null
           certifications?: Json | null
           consultation_fee?: number | null
           created_at?: string | null
           education?: Json | null
+          emergency_services?: boolean | null
           firm_name?: string | null
           hourly_rate?: number | null
           id?: string
+          immediate_consultation?: boolean | null
+          in_person_consultation_fee?: number | null
           is_featured?: boolean | null
           is_verified?: boolean | null
+          language_proficiency?: Json | null
           languages?: string[] | null
+          last_active?: string | null
           liability_insurance_verified?: boolean | null
           location?: string | null
           membership_type?: string | null
+          monthly_booking_count?: number | null
+          online_consultation_fee?: number | null
           professional_associations?: Json | null
           rating?: number | null
           response_time?: string | null
@@ -625,6 +683,7 @@ export type Database = {
           verification_documents?: Json | null
           verification_status?: string | null
           video_consultation_available?: boolean | null
+          weekly_booking_count?: number | null
           years_experience?: number | null
         }
         Relationships: [
@@ -709,6 +768,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      lawyer_search_history: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          filters: Json | null
+          id: string
+          location: string | null
+          search_query: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          filters?: Json | null
+          id?: string
+          location?: string | null
+          search_query?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          filters?: Json | null
+          id?: string
+          location?: string | null
+          search_query?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       legal_aid_cases: {
         Row: {
@@ -1118,6 +1207,45 @@ export type Database = {
           priority?: string | null
           status?: string | null
           title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_lawyer_preferences: {
+        Row: {
+          consultation_type: string | null
+          created_at: string | null
+          id: string
+          location_preference: string | null
+          preferred_categories: string[] | null
+          preferred_languages: string[] | null
+          price_range_max: number | null
+          price_range_min: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consultation_type?: string | null
+          created_at?: string | null
+          id?: string
+          location_preference?: string | null
+          preferred_categories?: string[] | null
+          preferred_languages?: string[] | null
+          price_range_max?: number | null
+          price_range_min?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consultation_type?: string | null
+          created_at?: string | null
+          id?: string
+          location_preference?: string | null
+          preferred_categories?: string[] | null
+          preferred_languages?: string[] | null
+          price_range_max?: number | null
+          price_range_min?: number | null
+          updated_at?: string | null
           user_id?: string | null
         }
         Relationships: []
