@@ -68,7 +68,10 @@ export const FindLawyer = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("lawyer_profiles")
-        .select("*, profiles(avatar_url)");
+        .select(`
+          *,
+          profiles(avatar_url)
+        `);
 
       if (error) {
         toast({
