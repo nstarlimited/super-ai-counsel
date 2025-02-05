@@ -210,6 +210,262 @@ export type Database = {
         }
         Relationships: []
       }
+      consultation_action_plans: {
+        Row: {
+          action_items: Json
+          consultation_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          action_items: Json
+          consultation_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          action_items?: Json
+          consultation_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultation_action_plans_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultation_documents: {
+        Row: {
+          consultation_id: string | null
+          file_name: string
+          file_path: string
+          file_type: string
+          id: string
+          uploaded_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          consultation_id?: string | null
+          file_name: string
+          file_path: string
+          file_type: string
+          id?: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          consultation_id?: string | null
+          file_name?: string
+          file_path?: string
+          file_type?: string
+          id?: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultation_documents_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultation_feedback: {
+        Row: {
+          consultation_id: string | null
+          feedback_text: string | null
+          id: string
+          rating: number | null
+          submitted_at: string
+          submitted_by: string | null
+        }
+        Insert: {
+          consultation_id?: string | null
+          feedback_text?: string | null
+          id?: string
+          rating?: number | null
+          submitted_at?: string
+          submitted_by?: string | null
+        }
+        Update: {
+          consultation_id?: string | null
+          feedback_text?: string | null
+          id?: string
+          rating?: number | null
+          submitted_at?: string
+          submitted_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultation_feedback_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultation_invoices: {
+        Row: {
+          amount: number
+          consultation_id: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          paid_at: string | null
+          status: string | null
+        }
+        Insert: {
+          amount: number
+          consultation_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          paid_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount?: number
+          consultation_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          paid_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultation_invoices_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_consultations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultation_questionnaires: {
+        Row: {
+          consultation_type_id: string | null
+          created_at: string
+          id: string
+          is_required: boolean | null
+          questions: Json
+        }
+        Insert: {
+          consultation_type_id?: string | null
+          created_at?: string
+          id?: string
+          is_required?: boolean | null
+          questions: Json
+        }
+        Update: {
+          consultation_type_id?: string | null
+          created_at?: string
+          id?: string
+          is_required?: boolean | null
+          questions?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultation_questionnaires_consultation_type_id_fkey"
+            columns: ["consultation_type_id"]
+            isOneToOne: false
+            referencedRelation: "consultation_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultation_responses: {
+        Row: {
+          consultation_id: string | null
+          id: string
+          questionnaire_id: string | null
+          responses: Json
+          submitted_at: string
+          submitted_by: string | null
+        }
+        Insert: {
+          consultation_id?: string | null
+          id?: string
+          questionnaire_id?: string | null
+          responses: Json
+          submitted_at?: string
+          submitted_by?: string | null
+        }
+        Update: {
+          consultation_id?: string | null
+          id?: string
+          questionnaire_id?: string | null
+          responses?: Json
+          submitted_at?: string
+          submitted_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultation_responses_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "lawyer_consultations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consultation_responses_questionnaire_id_fkey"
+            columns: ["questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "consultation_questionnaires"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultation_types: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_emergency: boolean | null
+          is_group: boolean | null
+          max_participants: number | null
+          name: string
+          price: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_minutes: number
+          id?: string
+          is_emergency?: boolean | null
+          is_group?: boolean | null
+          max_participants?: number | null
+          name: string
+          price: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_emergency?: boolean | null
+          is_group?: boolean | null
+          max_participants?: number | null
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
       emergency_resources: {
         Row: {
           created_at: string
@@ -482,50 +738,94 @@ export type Database = {
       }
       lawyer_consultations: {
         Row: {
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          case_brief: string | null
           client_id: string | null
           consultation_type: string
+          consultation_type_id: string | null
           created_at: string
           duration_minutes: number
           id: string
           lawyer_id: string | null
+          meeting_link: string | null
+          meeting_location: string | null
+          meeting_type: string | null
           payment_amount: number
           payment_status: string | null
+          preferred_communication: string | null
+          rescheduled_from: string | null
           scheduled_at: string
+          special_requirements: string | null
           status: string | null
           updated_at: string
         }
         Insert: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          case_brief?: string | null
           client_id?: string | null
           consultation_type: string
+          consultation_type_id?: string | null
           created_at?: string
           duration_minutes: number
           id?: string
           lawyer_id?: string | null
+          meeting_link?: string | null
+          meeting_location?: string | null
+          meeting_type?: string | null
           payment_amount: number
           payment_status?: string | null
+          preferred_communication?: string | null
+          rescheduled_from?: string | null
           scheduled_at: string
+          special_requirements?: string | null
           status?: string | null
           updated_at?: string
         }
         Update: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          case_brief?: string | null
           client_id?: string | null
           consultation_type?: string
+          consultation_type_id?: string | null
           created_at?: string
           duration_minutes?: number
           id?: string
           lawyer_id?: string | null
+          meeting_link?: string | null
+          meeting_location?: string | null
+          meeting_type?: string | null
           payment_amount?: number
           payment_status?: string | null
+          preferred_communication?: string | null
+          rescheduled_from?: string | null
           scheduled_at?: string
+          special_requirements?: string | null
           status?: string | null
           updated_at?: string
         }
         Relationships: [
           {
+            foreignKeyName: "lawyer_consultations_consultation_type_id_fkey"
+            columns: ["consultation_type_id"]
+            isOneToOne: false
+            referencedRelation: "consultation_types"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "lawyer_consultations_lawyer_id_fkey"
             columns: ["lawyer_id"]
             isOneToOne: false
             referencedRelation: "lawyer_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lawyer_consultations_rescheduled_from_fkey"
+            columns: ["rescheduled_from"]
+            isOneToOne: false
+            referencedRelation: "lawyer_consultations"
             referencedColumns: ["id"]
           },
         ]

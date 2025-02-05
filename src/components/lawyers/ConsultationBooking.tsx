@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -17,8 +18,13 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Lawyer } from "@/types/lawyer";
+import { ConsultationType, ConsultationBookingData } from "@/types/consultation";
 import { addDays, format, setHours, setMinutes } from "date-fns";
-import { useState } from "react";
+import { ConsultationTypeSelect } from "./ConsultationTypeSelect";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Video, PersonStanding } from "lucide-react";
 
 const timeSlots = [
   "09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"
@@ -33,6 +39,10 @@ type ConsultationBookingProps = {
 export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBookingProps) => {
   const [date, setDate] = useState<Date>();
   const [timeSlot, setTimeSlot] = useState<string>();
+  const [selectedType, setSelectedType] = useState<ConsultationType>();
+  const [meetingType, setMeetingType] = useState<'virtual' | 'in_person'>('virtual');
+  const [caseBrief, setCaseBrief] = useState('');
+  const [specialRequirements, setSpecialRequirements] = useState('');
   const { toast } = useToast();
 
   const handleBooking = async () => {
@@ -50,10 +60,10 @@ export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBoo
         return;
       }
 
-      if (!date || !timeSlot) {
+      if (!date || !timeSlot || !selectedType) {
         toast({
           title: "Missing information",
-          description: "Please select both date and time",
+          description: "Please fill in all required fields",
           variant: "destructive",
         });
         return;
@@ -62,13 +72,26 @@ export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBoo
       const [hours, minutes] = timeSlot.split(":").map(Number);
       const scheduledAt = setMinutes(setHours(date, hours), minutes);
 
-      const { error } = await supabase.from("lawyer_consultations").insert({
+      const bookingData: ConsultationBookingData = {
         lawyer_id: lawyer.id,
-        client_id: user.id,
+        consultation_type_id: selectedType.id,
         scheduled_at: scheduledAt.toISOString(),
-        duration_minutes: 60,
-        consultation_type: "initial",
-        payment_amount: lawyer.consultation_fee,
+        meeting_type: meetingType,
+        case_brief: caseBrief,
+        special_requirements: specialRequirements,
+      };
+
+      const { error } = await supabase.from("lawyer_consultations").insert({
+        lawyer_id: bookingData.lawyer_id,
+        client_id: user.id,
+        consultation_type_id: bookingData.consultation_type_id,
+        scheduled_at: bookingData.scheduled_at,
+        meeting_type: bookingData.meeting_type,
+        case_brief: bookingData.case_brief,
+        special_requirements: bookingData.special_requirements,
+        status: 'pending',
+        payment_status: 'pending',
+        payment_amount: selectedType.price,
       });
 
       if (error) throw error;
@@ -89,43 +112,96 @@ export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBoo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Book Consultation with {lawyer.firm_name}</DialogTitle>
           <DialogDescription>
-            Select your preferred date and time for the consultation.
-            {lawyer.consultation_fee > 0 && (
-              <p className="mt-2">
-                Consultation fee: ${lawyer.consultation_fee}
-              </p>
-            )}
+            Select your preferred consultation type and schedule.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            disabled={(date) => date < new Date() || date > addDays(new Date(), 30)}
-            className="rounded-md border"
+        <div className="space-y-6">
+          <ConsultationTypeSelect
+            onSelect={setSelectedType}
+            selectedTypeId={selectedType?.id}
           />
-          <Select onValueChange={setTimeSlot}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select time" />
-            </SelectTrigger>
-            <SelectContent>
-              {timeSlots.map((slot) => (
-                <SelectItem key={slot} value={slot}>
-                  {slot}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {date && timeSlot && (
-            <p className="text-sm text-muted-foreground">
-              Your consultation is scheduled for {format(date, "MMMM do, yyyy")} at {timeSlot}
-            </p>
+
+          <div className="space-y-4">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              disabled={(date) => date < new Date() || date > addDays(new Date(), 30)}
+              className="rounded-md border"
+            />
+            <Select onValueChange={setTimeSlot}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select time" />
+              </SelectTrigger>
+              <SelectContent>
+                {timeSlots.map((slot) => (
+                  <SelectItem key={slot} value={slot}>
+                    {slot}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <Label>Meeting Type</Label>
+              <RadioGroup
+                defaultValue="virtual"
+                onValueChange={(value) => setMeetingType(value as 'virtual' | 'in_person')}
+                className="flex gap-4 mt-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="virtual" id="virtual" />
+                  <Label htmlFor="virtual" className="flex items-center gap-1">
+                    <Video className="h-4 w-4" /> Virtual
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="in_person" id="in_person" />
+                  <Label htmlFor="in_person" className="flex items-center gap-1">
+                    <PersonStanding className="h-4 w-4" /> In-Person
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="caseBrief">Case Brief</Label>
+              <Textarea
+                id="caseBrief"
+                placeholder="Briefly describe your case..."
+                value={caseBrief}
+                onChange={(e) => setCaseBrief(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="specialRequirements">Special Requirements</Label>
+              <Textarea
+                id="specialRequirements"
+                placeholder="Any special requirements or accommodations..."
+                value={specialRequirements}
+                onChange={(e) => setSpecialRequirements(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {date && timeSlot && selectedType && (
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>
+                Your {selectedType.name} consultation is scheduled for{" "}
+                {format(date, "MMMM do, yyyy")} at {timeSlot}
+              </p>
+              <p>Duration: {selectedType.duration_minutes} minutes</p>
+              <p>Cost: ${selectedType.price}</p>
+            </div>
           )}
+
           <Button onClick={handleBooking} className="w-full">
             Book Consultation
           </Button>
