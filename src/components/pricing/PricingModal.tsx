@@ -5,7 +5,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 interface PlanFeature {
   name: string;
@@ -18,7 +21,7 @@ interface Plan {
   period: string;
   features: PlanFeature[];
   popular?: boolean;
-  creemUrl: string;
+  secretKey: string;
 }
 
 const plans: Plan[] = [
@@ -26,7 +29,7 @@ const plans: Plan[] = [
     name: "Basic",
     price: "$49",
     period: "/month",
-    creemUrl: "https://creem.io/your-basic-plan-url",
+    secretKey: "CREEM_BASIC_URL",
     features: [
       { name: "Basic legal document templates", included: true },
       { name: "5 AI legal queries/month", included: true },
@@ -43,7 +46,7 @@ const plans: Plan[] = [
     price: "$99",
     period: "/month",
     popular: true,
-    creemUrl: "https://creem.io/your-pro-plan-url",
+    secretKey: "CREEM_PRO_URL",
     features: [
       { name: "All Basic features", included: true },
       { name: "Unlimited AI legal assistance", included: true },
@@ -59,7 +62,7 @@ const plans: Plan[] = [
     name: "Lifetime",
     price: "$149",
     period: " one-time",
-    creemUrl: "https://creem.io/your-lifetime-plan-url",
+    secretKey: "CREEM_LIFETIME_URL",
     features: [
       { name: "All Professional features", included: true },
       { name: "Lifetime access", included: true },
@@ -79,8 +82,47 @@ interface PricingModalProps {
 }
 
 export function PricingModal({ open, onOpenChange }: PricingModalProps) {
-  const handleUpgrade = (creemUrl: string) => {
-    window.location.href = creemUrl;
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const handleUpgrade = async (plan: Plan) => {
+    try {
+      setLoadingPlan(plan.name);
+      
+      // Track upgrade button click
+      await supabase.from('user_activities').insert({
+        activity_type: 'upgrade_click',
+        activity_data: {
+          plan_name: plan.name,
+          plan_price: plan.price,
+          plan_period: plan.period
+        }
+      });
+
+      // Get the Creem URL from secrets
+      const { data: { value: creemUrl }, error: secretError } = await supabase
+        .from('secrets')
+        .select('value')
+        .eq('name', plan.secretKey)
+        .single();
+
+      if (secretError || !creemUrl) {
+        throw new Error('Failed to get payment URL');
+      }
+
+      // Redirect to Creem payment page
+      window.location.href = creemUrl;
+      
+    } catch (error) {
+      console.error('Upgrade error:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to initiate upgrade process. Please try again.",
+      });
+    } finally {
+      setLoadingPlan(null);
+    }
   };
 
   return (
@@ -126,9 +168,17 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
               <Button
                 className="w-full"
                 variant={plan.popular ? "default" : "outline"}
-                onClick={() => handleUpgrade(plan.creemUrl)}
+                onClick={() => handleUpgrade(plan)}
+                disabled={loadingPlan === plan.name}
               >
-                Upgrade to {plan.name}
+                {loadingPlan === plan.name ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  `Upgrade to ${plan.name}`
+                )}
               </Button>
             </div>
           ))}
