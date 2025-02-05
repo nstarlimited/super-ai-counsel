@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
+import { UpgradeButton } from "@/components/pricing/UpgradeButton";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ export const Header = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
+                <UpgradeButton />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-12 w-12">
