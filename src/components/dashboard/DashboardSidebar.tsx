@@ -7,6 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 import {
   Home,
@@ -22,6 +23,7 @@ import {
   Users as Community,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { UpgradeButton } from "../pricing/UpgradeButton";
 
 export function DashboardSidebar() {
   const menuGroups = [
@@ -94,6 +96,9 @@ export function DashboardSidebar() {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <SidebarFooter className="p-2">
+        <UpgradeButton />
+      </SidebarFooter>
     </Sidebar>
   );
 }
