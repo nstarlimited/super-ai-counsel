@@ -99,15 +99,11 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
         }
       });
 
-      // Get the Creem URL from secrets
-      const { data: { value: creemUrl }, error: secretError } = await supabase
-        .from('secrets')
-        .select('value')
-        .eq('name', plan.secretKey)
-        .single();
-
-      if (secretError || !creemUrl) {
-        throw new Error('Failed to get payment URL');
+      // Get the Creem URL from environment variables
+      const creemUrl = process.env[plan.secretKey];
+      
+      if (!creemUrl) {
+        throw new Error('Payment URL not configured');
       }
 
       // Redirect to Creem payment page

@@ -72,23 +72,16 @@ export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBoo
       const [hours, minutes] = timeSlot.split(":").map(Number);
       const scheduledAt = setMinutes(setHours(date, hours), minutes);
 
-      const bookingData: ConsultationBookingData = {
+      const { error } = await supabase.from("lawyer_consultations").insert({
         lawyer_id: lawyer.id,
+        client_id: user.id,
         consultation_type_id: selectedType.id,
+        consultation_type: selectedType.name,
+        duration_minutes: selectedType.duration_minutes,
         scheduled_at: scheduledAt.toISOString(),
         meeting_type: meetingType,
         case_brief: caseBrief,
         special_requirements: specialRequirements,
-      };
-
-      const { error } = await supabase.from("lawyer_consultations").insert({
-        lawyer_id: bookingData.lawyer_id,
-        client_id: user.id,
-        consultation_type_id: bookingData.consultation_type_id,
-        scheduled_at: bookingData.scheduled_at,
-        meeting_type: bookingData.meeting_type,
-        case_brief: bookingData.case_brief,
-        special_requirements: bookingData.special_requirements,
         status: 'pending',
         payment_status: 'pending',
         payment_amount: selectedType.price,
@@ -102,6 +95,7 @@ export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBoo
       });
       onClose();
     } catch (error) {
+      console.error('Booking error:', error);
       toast({
         title: "Error",
         description: "Failed to book consultation. Please try again.",
