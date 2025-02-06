@@ -100,14 +100,18 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
       });
 
       // Get the Creem URL from environment variables
-      const creemUrl = process.env[plan.secretKey];
-      
-      if (!creemUrl) {
+      const { data: secrets, error: secretsError } = await supabase
+        .from('secrets')
+        .select('value')
+        .eq('name', plan.secretKey)
+        .single();
+
+      if (secretsError || !secrets?.value) {
         throw new Error('Payment URL not configured');
       }
 
       // Redirect to Creem payment page
-      window.location.href = creemUrl;
+      window.location.href = secrets.value;
       
     } catch (error) {
       console.error('Upgrade error:', error);
