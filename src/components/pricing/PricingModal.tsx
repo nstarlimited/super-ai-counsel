@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Check, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
 
 interface PlanFeature {
   name: string;
@@ -21,7 +20,6 @@ interface Plan {
   period: string;
   features: PlanFeature[];
   popular?: boolean;
-  secretKey: string;
   url: string;
 }
 
@@ -30,7 +28,6 @@ const plans: Plan[] = [
     name: "Basic",
     price: "$49",
     period: "/month",
-    secretKey: "CREEM_BASIC_URL",
     url: import.meta.env.VITE_CREEM_BASIC_URL || "",
     features: [
       { name: "Basic legal document templates", included: true },
@@ -48,7 +45,6 @@ const plans: Plan[] = [
     price: "$99",
     period: "/month",
     popular: true,
-    secretKey: "CREEM_PRO_URL",
     url: import.meta.env.VITE_CREEM_PRO_URL || "",
     features: [
       { name: "All Basic features", included: true },
@@ -65,7 +61,6 @@ const plans: Plan[] = [
     name: "Lifetime",
     price: "$149",
     period: " one-time",
-    secretKey: "CREEM_LIFETIME_URL",
     url: import.meta.env.VITE_CREEM_LIFETIME_URL || "",
     features: [
       { name: "All Professional features", included: true },
@@ -87,37 +82,34 @@ interface PricingModalProps {
 
 export function PricingModal({ open, onOpenChange }: PricingModalProps) {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const { toast } = useToast();
 
   const handleUpgrade = async (plan: Plan) => {
+    if (!plan.url) {
+      console.error('Payment URL not configured for', plan.name);
+      return;
+    }
+
+    setLoadingPlan(plan.name);
+
     try {
-      setLoadingPlan(plan.name);
-      
-      // Track upgrade button click
-      await supabase.from('user_activities').insert({
+      // Track upgrade button click (don't await to avoid delay)
+      supabase.from('user_activities').insert({
         activity_type: 'upgrade_click',
         activity_data: {
           plan_name: plan.name,
           plan_price: plan.price,
           plan_period: plan.period
         }
+      }).then(() => {
+        console.log('Click tracked successfully');
+      }).catch((error) => {
+        console.error('Error tracking click:', error);
       });
 
-      if (!plan.url) {
-        throw new Error('Payment URL not configured');
-      }
-
-      // Redirect to Creem payment page
+      // Redirect to payment page
       window.location.href = plan.url;
-      
     } catch (error) {
-      console.error('Upgrade error:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to initiate upgrade process. Please try again.",
-      });
-    } finally {
+      console.error('Navigation error:', error);
       setLoadingPlan(null);
     }
   };
