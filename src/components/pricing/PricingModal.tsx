@@ -5,8 +5,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Check, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PlanFeature {
@@ -81,37 +80,19 @@ interface PricingModalProps {
 }
 
 export function PricingModal({ open, onOpenChange }: PricingModalProps) {
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const handleUpgrade = (plan: Plan) => {
+    // Track the click without waiting for the response
+    supabase.from('user_activities').insert({
+      activity_type: 'upgrade_click',
+      activity_data: {
+        plan_name: plan.name,
+        plan_price: plan.price,
+        plan_period: plan.period
+      }
+    });
 
-  const handleUpgrade = async (plan: Plan) => {
-    if (!plan.url) {
-      console.error('Payment URL not configured for', plan.name);
-      return;
-    }
-
-    setLoadingPlan(plan.name);
-
-    try {
-      // Track upgrade button click (don't await to avoid delay)
-      supabase.from('user_activities').insert({
-        activity_type: 'upgrade_click',
-        activity_data: {
-          plan_name: plan.name,
-          plan_price: plan.price,
-          plan_period: plan.period
-        }
-      }).then(() => {
-        console.log('Click tracked successfully');
-      }).catch((error) => {
-        console.error('Error tracking click:', error);
-      });
-
-      // Redirect to payment page
-      window.location.href = plan.url;
-    } catch (error) {
-      console.error('Navigation error:', error);
-      setLoadingPlan(null);
-    }
+    // Immediate redirect to payment URL
+    window.location.href = plan.url;
   };
 
   return (
@@ -158,16 +139,8 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
                 className="w-full"
                 variant={plan.popular ? "default" : "outline"}
                 onClick={() => handleUpgrade(plan)}
-                disabled={loadingPlan === plan.name}
               >
-                {loadingPlan === plan.name ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  `Upgrade to ${plan.name}`
-                )}
+                Upgrade to {plan.name}
               </Button>
             </div>
           ))}
