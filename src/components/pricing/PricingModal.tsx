@@ -22,6 +22,7 @@ interface Plan {
   features: PlanFeature[];
   popular?: boolean;
   secretKey: string;
+  url: string;
 }
 
 const plans: Plan[] = [
@@ -30,6 +31,7 @@ const plans: Plan[] = [
     price: "$49",
     period: "/month",
     secretKey: "CREEM_BASIC_URL",
+    url: import.meta.env.VITE_CREEM_BASIC_URL || "",
     features: [
       { name: "Basic legal document templates", included: true },
       { name: "5 AI legal queries/month", included: true },
@@ -47,6 +49,7 @@ const plans: Plan[] = [
     period: "/month",
     popular: true,
     secretKey: "CREEM_PRO_URL",
+    url: import.meta.env.VITE_CREEM_PRO_URL || "",
     features: [
       { name: "All Basic features", included: true },
       { name: "Unlimited AI legal assistance", included: true },
@@ -63,6 +66,7 @@ const plans: Plan[] = [
     price: "$149",
     period: " one-time",
     secretKey: "CREEM_LIFETIME_URL",
+    url: import.meta.env.VITE_CREEM_LIFETIME_URL || "",
     features: [
       { name: "All Professional features", included: true },
       { name: "Lifetime access", included: true },
@@ -99,19 +103,12 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
         }
       });
 
-      // Get the Creem URL from environment variables
-      const { data: secrets, error: secretsError } = await supabase
-        .from('secrets')
-        .select('value')
-        .eq('name', plan.secretKey)
-        .single();
-
-      if (secretsError || !secrets?.value) {
+      if (!plan.url) {
         throw new Error('Payment URL not configured');
       }
 
       // Redirect to Creem payment page
-      window.location.href = secrets.value;
+      window.location.href = plan.url;
       
     } catch (error) {
       console.error('Upgrade error:', error);
