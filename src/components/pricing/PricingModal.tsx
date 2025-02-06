@@ -81,6 +81,9 @@ interface PricingModalProps {
 
 export function PricingModal({ open, onOpenChange }: PricingModalProps) {
   const handleUpgrade = (plan: Plan) => {
+    console.log('Initiating upgrade for plan:', plan.name);
+    console.log('Redirect URL:', plan.url);
+
     // Track the click without waiting for the response
     supabase.from('user_activities').insert({
       activity_type: 'upgrade_click',
@@ -89,10 +92,18 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
         plan_price: plan.price,
         plan_period: plan.period
       }
+    }).then(() => {
+      console.log('Activity logged successfully');
+    }).catch((error) => {
+      console.error('Error logging activity:', error);
     });
 
     // Immediate redirect to payment URL
-    window.location.href = plan.url;
+    if (plan.url) {
+      window.location.href = plan.url;
+    } else {
+      console.error('Payment URL not configured for plan:', plan.name);
+    }
   };
 
   return (
