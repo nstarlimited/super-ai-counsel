@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface PlanFeature {
   name: string;
@@ -19,7 +20,6 @@ interface Plan {
   period: string;
   features: PlanFeature[];
   popular?: boolean;
-  url: string;
 }
 
 const plans: Plan[] = [
@@ -27,7 +27,6 @@ const plans: Plan[] = [
     name: "Basic",
     price: "$49",
     period: "/month",
-    url: import.meta.env.VITE_CREEM_BASIC_URL || "",
     features: [
       { name: "Basic legal document templates", included: true },
       { name: "5 AI legal queries/month", included: true },
@@ -44,7 +43,6 @@ const plans: Plan[] = [
     price: "$99",
     period: "/month",
     popular: true,
-    url: import.meta.env.VITE_CREEM_PRO_URL || "",
     features: [
       { name: "All Basic features", included: true },
       { name: "Unlimited AI legal assistance", included: true },
@@ -60,7 +58,6 @@ const plans: Plan[] = [
     name: "Lifetime",
     price: "$149",
     period: " one-time",
-    url: import.meta.env.VITE_CREEM_LIFETIME_URL || "",
     features: [
       { name: "All Professional features", included: true },
       { name: "Lifetime access", included: true },
@@ -80,29 +77,55 @@ interface PricingModalProps {
 }
 
 export function PricingModal({ open, onOpenChange }: PricingModalProps) {
-  const handleUpgrade = (plan: Plan) => {
+  const { toast } = useToast();
+
+  const handleUpgrade = async (plan: Plan) => {
     console.log('Initiating upgrade for plan:', plan.name);
-    console.log('Redirect URL:', plan.url);
 
-    // Track the click without waiting for the response
-    supabase.from('user_activities').insert({
-      activity_type: 'upgrade_click',
-      activity_data: {
-        plan_name: plan.name,
-        plan_price: plan.price,
-        plan_period: plan.period
+    try {
+      // Get payment link from Edge Function
+      const { data, error } = await supabase.functions.invoke('get-payment-link', {
+        body: { planName: plan.name }
+      });
+
+      if (error) {
+        console.error('Error getting payment link:', error);
+        toast({
+          title: "Error",
+          description: "Unable to process upgrade request. Please try again.",
+          variant: "destructive",
+        });
+        return;
       }
-    }).then(() => {
-      console.log('Activity logged successfully');
-    }).catch((error) => {
-      console.error('Error logging activity:', error);
-    });
 
-    // Immediate redirect to payment URL
-    if (plan.url) {
-      window.location.href = plan.url;
-    } else {
-      console.error('Payment URL not configured for plan:', plan.name);
+      // Track the click without waiting for the response
+      supabase.from('user_activities').insert({
+        activity_type: 'upgrade_click',
+        activity_data: {
+          plan_name: plan.name,
+          plan_price: plan.price,
+          plan_period: plan.period
+        }
+      }).then(() => {
+        console.log('Activity logged successfully');
+      }).catch((error) => {
+        console.error('Error logging activity:', error);
+      });
+
+      // Redirect to payment URL
+      if (data?.url) {
+        console.log('Redirecting to payment URL:', data.url);
+        window.location.href = data.url;
+      } else {
+        throw new Error('Payment URL not received');
+      }
+    } catch (error) {
+      console.error('Error in upgrade process:', error);
+      toast({
+        title: "Error",
+        description: "Unable to process upgrade request. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
