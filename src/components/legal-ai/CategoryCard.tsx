@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { AgentDetailsDialog } from "./AgentDetailsDialog";
-
 interface CategoryCardProps {
   title: string;
   description: string;
@@ -17,24 +16,20 @@ interface CategoryCardProps {
     rating: number;
   }>;
 }
-
 export const CategoryCard = ({
   title,
   description,
   icon: Icon,
   agentCount,
-  agents = [],
+  agents = []
 }: CategoryCardProps) => {
   const [selectedAgent, setSelectedAgent] = useState<CategoryCardProps["agents"][number] | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
   const handleAgentClick = (agent: CategoryCardProps["agents"][number]) => {
     setSelectedAgent(agent);
     setDialogOpen(true);
   };
-
-  return (
-    <>
+  return <>
       <Card className="hover:shadow-lg transition-shadow">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-between">
@@ -43,34 +38,20 @@ export const CategoryCard = ({
               <CardTitle className="text-lg">{title}</CardTitle>
             </div>
             <div className="flex items-center space-x-3">
-              <Badge variant="secondary" className="px-2 py-1">{agentCount} Agents</Badge>
+              <Badge variant="secondary" className="px-2 py-1 mx-[30px]">{agentCount} Agents</Badge>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-4">{description}</p>
-          {agents.length > 0 && (
-            <div className="space-y-2">
-              {agents.map((agent) => (
-                <Button
-                  key={agent.name}
-                  variant="outline"
-                  className="w-full justify-start"
-                  onClick={() => handleAgentClick(agent)}
-                >
+          {agents.length > 0 && <div className="space-y-2">
+              {agents.map(agent => <Button key={agent.name} variant="outline" className="w-full justify-start" onClick={() => handleAgentClick(agent)}>
                   <span className="truncate">{agent.name}</span>
-                </Button>
-              ))}
-            </div>
-          )}
+                </Button>)}
+            </div>}
         </CardContent>
       </Card>
 
-      <AgentDetailsDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        agent={selectedAgent}
-      />
-    </>
-  );
+      <AgentDetailsDialog open={dialogOpen} onOpenChange={setDialogOpen} agent={selectedAgent} />
+    </>;
 };
