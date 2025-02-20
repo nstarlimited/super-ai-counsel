@@ -1,5 +1,7 @@
+
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const plans = [
   {
@@ -64,6 +66,8 @@ const plans = [
 ];
 
 export const Pricing = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
@@ -107,6 +111,7 @@ export const Pricing = () => {
                     ? "bg-secondary text-primary hover:bg-secondary/90"
                     : "bg-primary hover:bg-primary/90"
                 }
+                onClick={() => navigate('/auth')}
               >
                 Start Free Trial
               </Button>
