@@ -82,40 +82,7 @@ export const FindLawyer = () => {
         throw error;
       }
 
-      return data.map((lawyer): Lawyer => ({
-        id: lawyer.id,
-        user_id: lawyer.user_id,
-        firm_name: lawyer.firm_name || "",
-        specializations: Array.isArray(lawyer.specializations) ? lawyer.specializations : [],
-        years_experience: Number(lawyer.years_experience) || 0,
-        languages: Array.isArray(lawyer.languages) ? lawyer.languages : [],
-        hourly_rate: Number(lawyer.hourly_rate) || 0,
-        is_verified: Boolean(lawyer.is_verified),
-        rating: Number(lawyer.rating) || 0,
-        total_reviews: Number(lawyer.total_reviews) || 0,
-        location: lawyer.location || "",
-        availability_status: lawyer.availability_status || "unavailable",
-        created_at: lawyer.created_at,
-        updated_at: lawyer.updated_at,
-        is_featured: Boolean(lawyer.is_featured),
-        success_rate: Number(lawyer.success_rate) || 0,
-        response_time: lawyer.response_time || "",
-        education: Array.isArray(lawyer.education) ? lawyer.education : [],
-        certifications: Array.isArray(lawyer.certifications) ? lawyer.certifications : [],
-        bar_memberships: Array.isArray(lawyer.bar_memberships) ? lawyer.bar_memberships : [],
-        awards: Array.isArray(lawyer.awards) ? lawyer.awards : [],
-        professional_associations: Array.isArray(lawyer.professional_associations) ? lawyer.professional_associations : [],
-        consultation_fee: Number(lawyer.consultation_fee) || 0,
-        video_consultation_available: Boolean(lawyer.video_consultation_available),
-        accepts_document_sharing: Boolean(lawyer.accepts_document_sharing),
-        liability_insurance_verified: Boolean(lawyer.liability_insurance_verified),
-        membership_type: lawyer.membership_type || "basic",
-        case_history: Array.isArray(lawyer.case_history) ? lawyer.case_history : [],
-        verification_status: lawyer.verification_status || "pending",
-        verification_documents: Array.isArray(lawyer.verification_documents) ? lawyer.verification_documents : [],
-        profiles: lawyer.profiles,
-        avatar_url: lawyer.profiles?.avatar_url,
-      }));
+      return data as Lawyer[];
     },
   });
 
