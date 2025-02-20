@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -99,23 +100,19 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
       }
 
       // Track the click without waiting for the response
-      supabase.from('user_activities').insert({
+      await supabase.from('user_activities').insert({
         activity_type: 'upgrade_click',
         activity_data: {
           plan_name: plan.name,
           plan_price: plan.price,
           plan_period: plan.period
         }
-      }).then(() => {
-        console.log('Activity logged successfully');
-      }).catch((error) => {
-        console.error('Error logging activity:', error);
       });
 
-      // Redirect to payment URL
+      // Open payment URL in new tab
       if (data?.url) {
-        console.log('Redirecting to payment URL:', data.url);
-        window.location.href = data.url;
+        console.log('Opening payment URL in new tab:', data.url);
+        window.open(data.url, '_blank', 'noopener,noreferrer');
       } else {
         throw new Error('Payment URL not received');
       }
