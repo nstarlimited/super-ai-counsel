@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -18,7 +19,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Lawyer } from "@/types/lawyer";
-import { ConsultationType, ConsultationBookingData } from "@/types/consultation";
+import { ConsultationType } from "@/types/consultation";
 import { addDays, format, setHours, setMinutes } from "date-fns";
 import { ConsultationTypeSelect } from "./ConsultationTypeSelect";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,11 +31,11 @@ const timeSlots = [
   "09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"
 ];
 
-type ConsultationBookingProps = {
+interface ConsultationBookingProps {
   lawyer: Lawyer;
   isOpen: boolean;
   onClose: () => void;
-};
+}
 
 export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBookingProps) => {
   const [date, setDate] = useState<Date>();
@@ -103,6 +104,10 @@ export const ConsultationBooking = ({ lawyer, isOpen, onClose }: ConsultationBoo
       });
     }
   };
+
+  if (!lawyer) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
